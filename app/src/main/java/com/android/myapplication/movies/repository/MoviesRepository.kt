@@ -12,4 +12,7 @@ class MoviesRepository(private val remoteDataSource: RemoteDataSource){
     fun getMovies(pageNumber:Int,sortBy:Categories){
         remoteDataSource.getMovies(pageNumber,sortBy)
     }
+    fun searchMovies(pageNumber:Int,query:String){
+        remoteDataSource.searchMovies(pageNumber,query)
+    }
 }

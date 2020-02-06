@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/movieListFragment"
         android:name="com.android.myapplication.movies.ui.MovieListFragment"
-        android:label="fragment_movie_list"
+        android:label="Movies"
         tools:layout="@layout/fragment_movie_list" />
 </navigation>

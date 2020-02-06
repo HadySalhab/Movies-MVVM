@@ -13,5 +13,8 @@ class MovieListViewModel(private val repository: MoviesRepository) :ViewModel(){
     fun getMovies(pageNumber:Int,sortBy: Categories){
         repository.getMovies(pageNumber,sortBy)
     }
+    fun searchMovies(pageNumber:Int,query:String){
+        repository.searchMovies(pageNumber,query)
+    }
 
 }

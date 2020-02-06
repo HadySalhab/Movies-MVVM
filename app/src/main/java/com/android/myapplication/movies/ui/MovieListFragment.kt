@@ -1,12 +1,14 @@
 package com.android.myapplication.movies.ui
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 
@@ -29,6 +31,22 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
     private lateinit var adapter: MoviesRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
 
+
+    private var callbacks:Callbacks? =null
+    interface Callbacks{
+        fun onMovieListFragmentDisplayed()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,11 +54,13 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
         val rootView = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = rootView.findViewById(R.id.recyclerview)
         initRecyclerView()
+        setHasOptionsMenu(true)
         return rootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        callbacks?.onMovieListFragmentDisplayed()
         testRetrofitApi()
         movieListViewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
@@ -65,9 +85,57 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
         movieListViewModel.getMovies(pageNumber, sortBy)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_movie_list_menu,menu)
+            setUpSearchViewListener(menu)
+    }
+    private fun setUpSearchViewListener(menu: Menu) {
+        val searchItem: MenuItem = menu.findItem(R.id.menu_item_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.apply {
+            queryHint = context.getString(R.string.query_hint)
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                   query?.let {
+                       movieListViewModel.searchMovies(1,it)
+                   }
+                    onActionViewCollapsed()
+                    searchItem.collapseActionView()
+                    hideSoftKeyboard()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
+
+            })
+
+        }
+
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId==R.id.menu_item_clear){
+            getMovies(pageNumber = 1,sortBy = Categories.POPULAR)
+        }
+        return super.onOptionsItemSelected(item)
+        }
+
+    fun hideSoftKeyboard() {
+        view?.let {
+            val imm = context?.getSystemService<InputMethodManager>()
+
+            imm?.hideSoftInputFromWindow(
+                it.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+    }
+
     override fun onItemSelected(position: Int, item: Movie) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-
 }
+
+
