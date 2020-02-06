@@ -1,7 +1,6 @@
-package com.android.myapplication.movies.viewmodels
+package com.android.myapplication.movies.ui
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.myapplication.movies.repository.MoviesRepository
 import com.android.myapplication.movies.util.Categories
