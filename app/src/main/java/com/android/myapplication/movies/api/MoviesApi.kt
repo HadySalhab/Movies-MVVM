@@ -38,6 +38,10 @@ interface MoviesApi {
     ): Call<MoviesResponse>
 
     @GET("movie/{id}")
-    fun getMovieDetail(@Path("id") id: Int, @Query("append_to_response") details: String = "videos,credits,reviews"): Call<MovieDetailsResponse>
+    fun getMovieDetail(
+        @Path("id") id: Int,
+        @Query("append_to_response") details: String = "videos,credits,reviews",
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): Call<MovieDetailsResponse>
 
 }
