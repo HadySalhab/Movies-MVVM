@@ -87,6 +87,10 @@ dependencies {
     def cardview_version = "1.0.0"
     implementation "androidx.cardview:cardview:$cardview_version"
 
+    //Material Design Components
+    def material_version = '1.2.0-alpha02'
+    implementation "com.google.android.material:material:$material_version"
+
     // Recyclerview
     def recyclerview_version = "1.1.0-beta03"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
