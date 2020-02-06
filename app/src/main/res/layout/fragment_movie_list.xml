@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.MovieListFragment">
 
+    <include
+        android:id="@+id/loading_view"
+        android:visibility="gone"
+        android:layout_gravity="top"
+        layout="@layout/loading_list_item"
+        android:layout_height="@dimen/recycler_loading_view_height"
+        android:layout_width="match_parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
