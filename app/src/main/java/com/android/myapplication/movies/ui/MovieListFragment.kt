@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * A simple [Fragment] subclass.
  */
-class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
+class MovieListFragment : Fragment(){
     companion object {
         private const val TAG = "MovieListFragment"
     }
@@ -81,9 +81,17 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
 
     private fun initRecyclerView() {
         recyclerView.apply {
-            this@MovieListFragment.adapter = MoviesRecyclerAdapter(this@MovieListFragment)
+            this@MovieListFragment.adapter = MoviesRecyclerAdapter(onMovieClickListener)
             addItemDecoration(RecyclerViewDecoration())
             adapter = this@MovieListFragment.adapter
+            addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if(!recyclerView.canScrollVertically(1)){
+                        movieListViewModel.getMovieNextPage()
+                    }
+                }
+            })
         }
     }
 
@@ -164,11 +172,8 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
             )
         }
     }
-
-    override fun onItemSelected(position: Int, item: Movie) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private val onMovieClickListener:()->Unit={
     }
-
 }
 
 

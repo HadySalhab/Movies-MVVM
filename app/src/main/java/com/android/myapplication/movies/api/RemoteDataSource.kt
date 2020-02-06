@@ -1,7 +1,6 @@
 package com.android.myapplication.movies.api
 
 import NETWORK_TIMEOUT
-import android.app.DownloadManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -84,21 +83,22 @@ public class RemoteDataSource(
                 }
                 //success
                 if (response.code() == 200) {
+                    val list: ArrayList<Movie>? = (response.body())?.movies?.let { ArrayList(it) }
+                    Log.d(TAG, "fetched Movies: ${list}")
                     //get movies from the response body
-                    val fetchedMovies = response.body()?.movies
-
                     if (pageNumber == 1) {
                         //post the movies to livedata, to update the ui
-                        _movieList.postValue(fetchedMovies)
+                        _movieList.postValue(list)
                     } else {
                         //if page>1, we want to append the new fetched movies to the current movies, instead of replacing the current one
                         val currentMovies = _movieList.value?.toMutableList()
-                        fetchedMovies?.forEach { movie ->
-                            currentMovies?.add(movie)
+                        list?.let {
+                            currentMovies?.addAll(it)
                         }
+                        Log.d(TAG, "current appended Movies: ${currentMovies}")
                         _movieList.postValue(currentMovies)
                     }
-                } else {
+                }else {
                     //code!=200 (not OK)
                     val error = response.errorBody()
                     Log.e(TAG, "run: response error= ${error}")
@@ -143,18 +143,19 @@ public class RemoteDataSource(
                 }
                 //success
                 if (response.code() == 200) {
+                    val list: ArrayList<Movie>? = (response.body())?.movies?.let { ArrayList(it) }
+                    Log.d(TAG, "fetched Movies: ${list}")
                     //get movies from the response body
-                    val fetchedMovies = response.body()?.movies
-
                     if (pageNumber == 1) {
                         //post the movies to livedata, to update the ui
-                        _movieList.postValue(fetchedMovies)
+                        _movieList.postValue(list)
                     } else {
                         //if page>1, we want to append the new fetched movies to the current movies, instead of replacing the current one
                         val currentMovies = _movieList.value?.toMutableList()
-                        fetchedMovies?.forEach { movie ->
-                            currentMovies?.add(movie)
+                        list?.let {
+                            currentMovies?.addAll(it)
                         }
+                        Log.d(TAG, "current appended Movies: ${currentMovies}")
                         _movieList.postValue(currentMovies)
                     }
                 } else {

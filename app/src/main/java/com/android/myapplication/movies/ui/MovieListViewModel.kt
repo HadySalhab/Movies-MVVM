@@ -18,4 +18,8 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
     fun searchMovies(pageNumber: Int, query: String) {
         repository.searchMovies(pageNumber, query)
     }
+
+    fun getMovieNextPage(){
+        repository.getMovieNextPage()
+    }
 }
