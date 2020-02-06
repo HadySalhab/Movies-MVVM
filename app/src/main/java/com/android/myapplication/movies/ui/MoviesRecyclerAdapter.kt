@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.movie_list_item.view.*
 class MoviesRecyclerAdapter(private val interaction: Interaction? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
 
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
@@ -32,15 +33,11 @@ class MoviesRecyclerAdapter(private val interaction: Interaction? = null) :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
-        return MoviesViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.movie_list_item,
-                parent,
-                false
-            ),
+       return MoviesViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.movie_list_item,parent,false),
             interaction
         )
+
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -50,7 +47,6 @@ class MoviesRecyclerAdapter(private val interaction: Interaction? = null) :
             }
         }
     }
-
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
@@ -72,11 +68,10 @@ class MoviesRecyclerAdapter(private val interaction: Interaction? = null) :
             val image = IMAGE_BASE_URL + IMAGE_FILE_SIZE + item.posterPath
             Glide.with(itemView.context)
                 .load(image)
-                .apply(
-                    RequestOptions()
-                        .placeholder(R.drawable.loading_animation)
-                        .error(R.drawable.ic_broken_image)
-                )
+                .apply(RequestOptions()
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image))
+
                 .into(itemView.movie_image)
 
             movie_title.setText(item.title)
