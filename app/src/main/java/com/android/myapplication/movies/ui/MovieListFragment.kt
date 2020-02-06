@@ -10,10 +10,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
 import com.android.myapplication.movies.R
 import com.android.myapplication.movies.util.Categories
+import com.android.myapplication.movies.util.HorizontalDottedProgress
 import com.android.myapplication.movies.util.RecyclerViewDecoration
 import com.android.myapplication.popularmovies.api.model.Movie
 import kotlinx.android.synthetic.main.fragment_movie_list.*
@@ -30,6 +32,7 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
     private val movieListViewModel by viewModel<MovieListViewModel>()
     private lateinit var adapter: MoviesRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var loadingView:View
 
 
     private var callbacks:Callbacks? =null
@@ -53,6 +56,7 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = rootView.findViewById(R.id.recyclerview)
+        loadingView =rootView.findViewById(R.id.loading_view)
         initRecyclerView()
         setHasOptionsMenu(true)
         return rootView
@@ -64,9 +68,15 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
         testRetrofitApi()
         movieListViewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
+                hideDisplayLoading()
                 adapter.submitList(movies)
             }
         })
+    }
+    private fun hideDisplayLoading(){
+        recyclerView.visibility = View.VISIBLE
+        loadingView.visibility = View.GONE
+        movieListViewModel.isPerformingQuery = false
     }
 
     private fun initRecyclerView() {
@@ -97,6 +107,8 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
             queryHint = context.getString(R.string.query_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    displayLoading()
+
                    query?.let {
                        movieListViewModel.searchMovies(1,it)
                    }
@@ -115,8 +127,14 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
         }
 
     }
+    private fun displayLoading(){
+        loadingView.visibility = View.VISIBLE
+        recyclerView.visibility = View.INVISIBLE
+        movieListViewModel.isPerformingQuery = true
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.menu_item_clear){
+            displayLoading()
             getMovies(pageNumber = 1,sortBy = Categories.POPULAR)
         }
         return super.onOptionsItemSelected(item)
@@ -136,6 +154,7 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
     override fun onItemSelected(position: Int, item: Movie) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+    
 }
 
 
