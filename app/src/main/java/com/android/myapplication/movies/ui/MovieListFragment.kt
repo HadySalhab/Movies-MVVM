@@ -133,12 +133,26 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
         movieListViewModel.isPerformingQuery = true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId==R.id.menu_item_clear){
-            displayLoading()
-            getMovies(pageNumber = 1,sortBy = Categories.POPULAR)
-        }
-        return super.onOptionsItemSelected(item)
-        }
+     return  when(item.itemId){
+            R.id.menu_item_up_coming->{
+                displayLoading()
+                getMovies(pageNumber = 1,sortBy = Categories.UPCOMING)
+                true
+            }
+            R.id.menu_item_popular_movies->{
+                displayLoading()
+                getMovies(pageNumber = 1,sortBy = Categories.POPULAR)
+                true
+            }
+            R.id.menu_item_top_rated->{
+                displayLoading()
+                getMovies(pageNumber = 1,sortBy = Categories.TOP_RATED)
+                true
+            }
+
+         else -> super.onOptionsItemSelected(item)
+     }
+    }
 
     fun hideSoftKeyboard() {
         view?.let {
@@ -154,7 +168,7 @@ class MovieListFragment : Fragment(), MoviesRecyclerAdapter.Interaction {
     override fun onItemSelected(position: Int, item: Movie) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-    
+
 }
 
 
