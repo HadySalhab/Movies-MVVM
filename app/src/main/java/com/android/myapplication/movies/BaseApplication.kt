@@ -3,7 +3,9 @@ package com.android.myapplication.movies
 import BASE_URL
 import android.app.Application
 import com.android.myapplication.movies.api.MoviesApi
+import com.android.myapplication.movies.repository.MoviesRepository
 import com.android.myapplication.movies.viewmodels.MovieListViewModel
+import com.android.myapplication.popularmovies.api.model.Movie
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,7 +24,12 @@ class BaseApplication : Application() {
         }
 
         viewModel<MovieListViewModel> {
-            MovieListViewModel()
+            val repository:MoviesRepository = get()
+            MovieListViewModel(repository)
+        }
+
+        single<MoviesRepository> {
+            MoviesRepository()
         }
 
     }
