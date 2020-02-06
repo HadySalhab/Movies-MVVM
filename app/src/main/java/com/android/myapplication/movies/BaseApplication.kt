@@ -23,14 +23,14 @@ class BaseApplication : Application() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(MoviesApi::class.java)
         }
-
         viewModel<MovieListViewModel> {
             val repository:MoviesRepository = get()
             MovieListViewModel(repository)
         }
         single<RemoteDataSource> {
             val appExecutors:AppExecutors=get()
-            RemoteDataSource(appExecutors)
+            val moviesApi:MoviesApi = get()
+            RemoteDataSource(appExecutors,moviesApi)
         }
 
         single<MoviesRepository> {
