@@ -1,11 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
+        <item name="colorOnSurface">@color/secondaryTextColor</item>
+        <item name="android:textColorPrimary">@color/secondaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="textAppearanceSubtitle2">@style/Movie.Subtitle2</item>
+    </style>
+
+    <style name="Movie.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">@color/secondaryTextColor</item>
     </style>
 
 </resources>
