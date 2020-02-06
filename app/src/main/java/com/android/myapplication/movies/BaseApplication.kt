@@ -29,12 +29,16 @@ class BaseApplication : Application() {
             MovieListViewModel(repository)
         }
         single<RemoteDataSource> {
-            RemoteDataSource()
+            val appExecutors:AppExecutors=get()
+            RemoteDataSource(appExecutors)
         }
 
         single<MoviesRepository> {
             val remoteDataSource:RemoteDataSource = get()
             MoviesRepository(remoteDataSource)
+        }
+        single<AppExecutors>{
+            AppExecutors()
         }
 
     }
