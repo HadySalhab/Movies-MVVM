@@ -50,6 +50,7 @@ public class RemoteDataSource(
     private inner class RetrieveMoviesRunnable(private val pageNumber: Int,private val sortBy:Categories) : Runnable {
         var cancelRequest = false
         override fun run() {
+            Log.d(TAG, "run: ${Thread.currentThread().name}")
             lateinit var response: Response<MoviesResponse>
             try {
                 when(sortBy){
