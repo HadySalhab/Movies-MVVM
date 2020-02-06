@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="small_dimen">8dp</dimen>
+    <dimen name="movie_image_height">250dp</dimen>
+    <dimen name="movie_title_text_size">25sp</dimen>
+    <dimen name="recycler_loading_view_height">80dp</dimen>
+</resources>
