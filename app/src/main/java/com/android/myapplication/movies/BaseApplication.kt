@@ -5,8 +5,7 @@ import android.app.Application
 import com.android.myapplication.movies.api.MoviesApi
 import com.android.myapplication.movies.api.RemoteDataSource
 import com.android.myapplication.movies.repository.MoviesRepository
-import com.android.myapplication.movies.viewmodels.MovieListViewModel
-import com.android.myapplication.popularmovies.api.model.Movie
+import com.android.myapplication.movies.ui.MovieListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel

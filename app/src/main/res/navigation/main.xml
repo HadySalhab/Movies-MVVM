@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/movieListFragment"
-        android:name="com.android.myapplication.movies.viewmodels.MovieListFragment"
+        android:name="com.android.myapplication.movies.ui.MovieListFragment"
         android:label="fragment_movie_list"
         tools:layout="@layout/fragment_movie_list" />
 </navigation>
