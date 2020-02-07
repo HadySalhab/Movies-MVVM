@@ -4,4 +4,6 @@
     <dimen name="movie_image_height">250dp</dimen>
     <dimen name="movie_title_text_size">25sp</dimen>
     <dimen name="recycler_loading_view_height">80dp</dimen>
+    <dimen name="play_placeholder_size">60dp</dimen>
+    <dimen name="medium_dimen">16dp</dimen>
 </resources>

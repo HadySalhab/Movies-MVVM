@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.movie_list_item.view.*
 
-class MoviesRecyclerAdapter (private val onMovieClickListener:()->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MoviesRecyclerAdapter (private val onMovieClickListener:(Movie)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var movies:MutableList<Movie> = mutableListOf()
 
     override fun getItemViewType(position: Int): Int {

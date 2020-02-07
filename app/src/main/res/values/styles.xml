@@ -20,4 +20,8 @@
         <item name="android:textColor">@color/secondaryTextColor</item>
     </style>
 
+    <style name="TextAppearance.Movies.Toolbar.Text" parent="TextAppearance.MaterialComponents.Headline5" >
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
 </resources>

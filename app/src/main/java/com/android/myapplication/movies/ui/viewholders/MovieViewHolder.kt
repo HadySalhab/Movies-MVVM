@@ -2,6 +2,7 @@ package com.android.myapplication.movies.ui.viewholders
 
 import IMAGE_BASE_URL
 import IMAGE_FILE_SIZE
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,15 +16,16 @@ import com.bumptech.glide.request.RequestOptions
 
 class MovieViewHolder private constructor(
       itemView: View
-     ,private val onMovieClickListener:()->Unit
+     ,private val onMovieClickListener:(Movie)->Unit
 ) : RecyclerView.ViewHolder(itemView) {
-
     private val movieImage = itemView.findViewById<ImageView>(R.id.movie_image)
     private val movieTitle = itemView.findViewById<TextView>(R.id.movie_title)
+    private lateinit var movie:Movie
 
 
     companion object{
-        fun getInstance(parent:ViewGroup,onMovieClickListener: () -> Unit): MovieViewHolder {
+        private const val TAG = "MovieViewHolder"
+        fun getInstance(parent:ViewGroup,onMovieClickListener: (Movie) -> Unit): MovieViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val itemView = inflater.inflate(R.layout.movie_list_item,parent,false)
             return MovieViewHolder(
@@ -32,8 +34,15 @@ class MovieViewHolder private constructor(
             )
         }
     }
+    init {
+        itemView.setOnClickListener {
+            Log.d(TAG, "itemview:clicked ")
+            onMovieClickListener.invoke(this.movie)
+        }
+    }
 
-    fun bind(movie: Movie){
+    fun bind(movie: Movie) {
+        this.movie = movie
         val image = IMAGE_BASE_URL + IMAGE_FILE_SIZE + movie.posterPath
         Glide.with(itemView.context)
             .load(image)
