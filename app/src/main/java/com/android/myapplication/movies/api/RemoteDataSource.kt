@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.android.myapplication.movies.AppExecutors
 import com.android.myapplication.movies.util.Categories
 import com.android.myapplication.popularmovies.api.model.Movie
+import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
 import com.android.myapplication.popularmovies.api.responses.MoviesResponse
 import retrofit2.Call
 import retrofit2.Response
@@ -23,9 +24,14 @@ public class RemoteDataSource(
 
     private var retrieveMoviesRunnable: RetrieveMoviesRunnable? = null
     private var searchMovieRunnable: SearchMovieRunnable? = null
+    private var detailsMovieRunnable: DetailsMovieRunnable? = null
     private val _movieList: MutableLiveData<List<Movie>> = MutableLiveData()
     val movieList: LiveData<List<Movie>>
         get() = _movieList
+
+    private val _detailsResponse = MutableLiveData<MovieDetailsResponse>()
+    val detailsResponse:LiveData<MovieDetailsResponse>
+    get() = _detailsResponse
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
         reset()
@@ -39,11 +45,19 @@ public class RemoteDataSource(
     }
 
     fun searchMovies(pageNumber: Int, query: String) {
-        reset()
+        resetSearchRunnable()
         searchMovieRunnable = SearchMovieRunnable(pageNumber = pageNumber, query = query)
 
         val handler = appExecutors.networkIO.submit(searchMovieRunnable)
 
+        appExecutors.networkIO.schedule(Runnable {
+            handler.cancel(true)
+        }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS)
+    }
+    fun getDetails(id:Long){
+        resetdetailsMovieRunnable()
+        detailsMovieRunnable = DetailsMovieRunnable(id)
+        val handler = appExecutors.networkIO.submit(detailsMovieRunnable)
         appExecutors.networkIO.schedule(Runnable {
             handler.cancel(true)
         }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -53,6 +67,16 @@ public class RemoteDataSource(
     private fun reset() {
         if (retrieveMoviesRunnable != null) {
             retrieveMoviesRunnable = null
+        }
+    }
+    private fun resetSearchRunnable() {
+        if (searchMovieRunnable != null) {
+            searchMovieRunnable = null
+        }
+    }
+    private fun resetdetailsMovieRunnable(){
+        if (detailsMovieRunnable != null) {
+            detailsMovieRunnable = null
         }
     }
 
@@ -167,6 +191,37 @@ public class RemoteDataSource(
             } catch (e: IOException) {
                 e.printStackTrace()
                 _movieList.postValue(null)
+            }
+        }
+    }
+    private inner class DetailsMovieRunnable(private val id:Long) :
+        Runnable {
+        var cancelRequest = false
+        override fun run() {
+            Log.d(TAG, "run: ${Thread.currentThread().name}")
+            try {
+                val response: Response<MovieDetailsResponse> = moviesApi.getMovieDetail(id = id).execute()
+                Log.d(TAG, "MovieDetailsResponse :${response}")
+                if (cancelRequest) {
+                    //IF User cancel the request, should return
+                    return
+                }
+                //success
+                if (response.code() == 200) {
+                    Log.d(TAG, "response code =200")
+                    val detailResponse = response.body()
+                    Log.d(TAG, "run: ${detailResponse}")
+                    _detailsResponse.postValue(detailResponse)
+
+                } else {
+                    //code!=200 (not OK)
+                    val error = response.errorBody()
+                    Log.e(TAG, "run: response error= ${error}")
+                    _detailsResponse.postValue (null)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                _detailsResponse.postValue(null)
             }
         }
     }

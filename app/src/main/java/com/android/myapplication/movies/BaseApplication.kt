@@ -40,7 +40,8 @@ class BaseApplication : Application() {
             AppExecutors()
         }
         viewModel <DetailActivityViewModel>{
-            DetailActivityViewModel()
+            val repository:MoviesRepository = get()
+            DetailActivityViewModel(repository)
         }
 
     }
