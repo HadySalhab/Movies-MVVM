@@ -6,6 +6,8 @@ import com.android.myapplication.movies.api.MoviesApi
 import com.android.myapplication.movies.api.RemoteDataSource
 import com.android.myapplication.movies.repository.MoviesRepository
 import com.android.myapplication.movies.ui.MovieListViewModel
+import com.android.myapplication.movies.ui.detail.DetailActivityViewModel
+import com.android.myapplication.movies.util.RemoteToLocal
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -41,7 +43,10 @@ class BaseApplication : Application() {
         }
         viewModel <DetailActivityViewModel>{
             val repository:MoviesRepository = get()
-            DetailActivityViewModel(repository)
+            DetailActivityViewModel(
+                repository,
+                RemoteToLocal()
+            )
         }
 
     }

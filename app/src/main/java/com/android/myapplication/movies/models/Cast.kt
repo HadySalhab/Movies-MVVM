@@ -8,5 +8,7 @@ data class Cast(
     @SerializedName("profile_path")
     val profilePath:String?=null,
     @SerializedName("character")
-    val character:String?=null
+    val character:String?=null,
+    @SerializedName("cast_id")
+    val castId:Int=0
 )

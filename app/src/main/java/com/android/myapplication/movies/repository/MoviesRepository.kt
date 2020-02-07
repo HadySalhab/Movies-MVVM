@@ -12,7 +12,7 @@ class MoviesRepository(private val remoteDataSource: RemoteDataSource) {
     private lateinit var categories: Categories
     private var query: String? = null
     val movieList: LiveData<List<Movie>> = remoteDataSource.movieList
-    val detailMovie: LiveData<MovieDetailsResponse> = remoteDataSource.detailsResponse
+    val detailMovieResponse: LiveData<MovieDetailsResponse> = remoteDataSource.detailsResponse
     fun getMovies(pageNumber: Int, sortBy: Categories) {
         categories = sortBy
         remoteDataSource.getMovies(pageNumber, sortBy)

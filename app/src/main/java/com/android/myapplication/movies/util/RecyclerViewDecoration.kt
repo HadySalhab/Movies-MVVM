@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewDecoration :RecyclerView.ItemDecoration(){
+class RecyclerViewDecoration(private val offset:Int=3) :RecyclerView.ItemDecoration(){
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -12,6 +12,6 @@ class RecyclerViewDecoration :RecyclerView.ItemDecoration(){
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        outRect.set(3,3,3,3)
+        outRect.set(offset,offset,offset,offset)
     }
 }

@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.android.myapplication.movies.api.MoviesApi
 import com.android.myapplication.movies.ui.MovieListFragment
+import com.android.myapplication.movies.ui.detail.DetailActivity
 import org.koin.android.ext.android.inject
 
 class MainActivity :AppCompatActivity(),MovieListFragment.Callbacks{
     val movieApi:MoviesApi by inject()
     private lateinit var toolbar:Toolbar
-    private lateinit var fragment:MovieListFragment
     companion object {
         private const val TAG = "MainActivity"
     }

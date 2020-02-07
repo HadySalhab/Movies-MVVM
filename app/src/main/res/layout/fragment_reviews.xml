@@ -1,12 +1,35 @@
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.android.myapplication.movies.ui.detail.DetailActivityViewModel" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_trailer"
+            android:id="@+id/list_reviews"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-             />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:reviewAdapterList="@{viewModel.reviewsDetails}" />
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="500dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="No Available Review At The Moment"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/colorAccent"
+            android:visibility="@{viewModel.isReviewListEmpty ? View.VISIBLE : View.GONE }" />
     </FrameLayout>
+</layout>
