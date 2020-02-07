@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * A simple [Fragment] subclass.
  */
-class MovieListFragment : Fragment(){
+class MovieListFragment : Fragment() {
     companion object {
         private const val TAG = "MovieListFragment"
     }
@@ -32,12 +32,13 @@ class MovieListFragment : Fragment(){
     private val movieListViewModel by viewModel<MovieListViewModel>()
     private lateinit var adapter: MoviesRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var loadingView:View
-    private lateinit var paginationLoadingView:View
+    private lateinit var loadingView: View
+    private lateinit var paginationLoadingView: View
 
 
-    private var callbacks:Callbacks? =null
-    interface Callbacks{
+    private var callbacks: Callbacks? = null
+
+    interface Callbacks {
         fun onMovieListFragmentDisplayed()
     }
 
@@ -57,7 +58,7 @@ class MovieListFragment : Fragment(){
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = rootView.findViewById(R.id.recyclerview)
-        loadingView =rootView.findViewById(R.id.loading_view)
+        loadingView = rootView.findViewById(R.id.loading_view)
         paginationLoadingView = rootView.findViewById(R.id.pagination_loading_view)
         initRecyclerView()
         setHasOptionsMenu(true)
@@ -75,7 +76,8 @@ class MovieListFragment : Fragment(){
             }
         })
     }
-    private fun hideDisplayLoading(){
+
+    private fun hideDisplayLoading() {
         loadingView.visibility = View.GONE
         paginationLoadingView.visibility = View.GONE
     }
@@ -85,12 +87,16 @@ class MovieListFragment : Fragment(){
             this@MovieListFragment.adapter = MoviesRecyclerAdapter(onMovieClickListener)
             addItemDecoration(RecyclerViewDecoration())
             adapter = this@MovieListFragment.adapter
-            addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    if(!recyclerView.canScrollVertically(1)){
+                    if (!recyclerView.canScrollVertically(1)) {
                         paginationLoadingView.visibility = View.VISIBLE
-                        movieListViewModel.getMovieNextPage()
+                        if (movieListViewModel.query == null) {
+                            movieListViewModel.getMovieNextPage()
+                        } else {
+                            movieListViewModel.searchNextPage()
+                        }
                     }
                 }
             })
@@ -102,14 +108,16 @@ class MovieListFragment : Fragment(){
     }
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
+        movieListViewModel.query = null
         movieListViewModel.getMovies(pageNumber, sortBy)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.fragment_movie_list_menu,menu)
-            setUpSearchViewListener(menu)
+        inflater.inflate(R.menu.fragment_movie_list_menu, menu)
+        setUpSearchViewListener(menu)
     }
+
     private fun setUpSearchViewListener(menu: Menu) {
         val searchItem: MenuItem = menu.findItem(R.id.menu_item_search)
         val searchView = searchItem.actionView as SearchView
@@ -119,9 +127,10 @@ class MovieListFragment : Fragment(){
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     displayLoading()
 
-                   query?.let {
-                       movieListViewModel.searchMovies(1,it)
-                   }
+                    query?.let {
+                        movieListViewModel.query = it
+                        movieListViewModel.searchMovies(1, it)
+                    }
                     onActionViewCollapsed()
                     searchItem.collapseActionView()
                     hideSoftKeyboard()
@@ -137,30 +146,32 @@ class MovieListFragment : Fragment(){
         }
 
     }
-    private fun displayLoading(){
+
+    private fun displayLoading() {
         loadingView.visibility = View.VISIBLE
-       // recyclerView.visibility = View.INVISIBLE
+        // recyclerView.visibility = View.INVISIBLE
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-     return  when(item.itemId){
-            R.id.menu_item_up_coming->{
+        return when (item.itemId) {
+            R.id.menu_item_up_coming -> {
                 displayLoading()
-                getMovies(pageNumber = 1,sortBy = Categories.UPCOMING)
+                getMovies(pageNumber = 1, sortBy = Categories.UPCOMING)
                 true
             }
-            R.id.menu_item_popular_movies->{
+            R.id.menu_item_popular_movies -> {
                 displayLoading()
-                getMovies(pageNumber = 1,sortBy = Categories.POPULAR)
+                getMovies(pageNumber = 1, sortBy = Categories.POPULAR)
                 true
             }
-            R.id.menu_item_top_rated->{
+            R.id.menu_item_top_rated -> {
                 displayLoading()
-                getMovies(pageNumber = 1,sortBy = Categories.TOP_RATED)
+                getMovies(pageNumber = 1, sortBy = Categories.TOP_RATED)
                 true
             }
 
-         else -> super.onOptionsItemSelected(item)
-     }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     fun hideSoftKeyboard() {
@@ -173,7 +184,8 @@ class MovieListFragment : Fragment(){
             )
         }
     }
-    private val onMovieClickListener:()->Unit={
+
+    private val onMovieClickListener: () -> Unit = {
     }
 }
 

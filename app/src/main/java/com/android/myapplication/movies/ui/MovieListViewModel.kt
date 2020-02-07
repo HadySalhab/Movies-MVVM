@@ -8,6 +8,8 @@ import com.android.myapplication.popularmovies.api.model.Movie
 
 class MovieListViewModel(private val repository: MoviesRepository) : ViewModel() {
 
+    var query:String?=null
+
     val movieList: LiveData<List<Movie>> = repository.movieList
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
@@ -21,4 +23,8 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
     fun getMovieNextPage(){
         repository.getMovieNextPage()
     }
+    fun searchNextPage(){
+        repository.searchNextPage()
+    }
+
 }
