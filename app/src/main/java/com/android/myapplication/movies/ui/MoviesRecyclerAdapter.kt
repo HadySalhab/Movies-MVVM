@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.android.myapplication.movies.R
+import com.android.myapplication.movies.ui.viewholders.MovieViewHolder
 import com.android.myapplication.popularmovies.api.model.Movie
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions

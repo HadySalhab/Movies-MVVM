@@ -8,7 +8,6 @@ import com.android.myapplication.popularmovies.api.model.Movie
 
 class MovieListViewModel(private val repository: MoviesRepository) : ViewModel() {
 
-    var isPerformingQuery = false
     val movieList: LiveData<List<Movie>> = repository.movieList
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {

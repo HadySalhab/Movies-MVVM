@@ -33,6 +33,7 @@ class MovieListFragment : Fragment(){
     private lateinit var adapter: MoviesRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var loadingView:View
+    private lateinit var paginationLoadingView:View
 
 
     private var callbacks:Callbacks? =null
@@ -57,6 +58,7 @@ class MovieListFragment : Fragment(){
         val rootView = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = rootView.findViewById(R.id.recyclerview)
         loadingView =rootView.findViewById(R.id.loading_view)
+        paginationLoadingView = rootView.findViewById(R.id.pagination_loading_view)
         initRecyclerView()
         setHasOptionsMenu(true)
         return rootView
@@ -74,9 +76,8 @@ class MovieListFragment : Fragment(){
         })
     }
     private fun hideDisplayLoading(){
-        recyclerView.visibility = View.VISIBLE
         loadingView.visibility = View.GONE
-        movieListViewModel.isPerformingQuery = false
+        paginationLoadingView.visibility = View.GONE
     }
 
     private fun initRecyclerView() {
@@ -88,6 +89,7 @@ class MovieListFragment : Fragment(){
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if(!recyclerView.canScrollVertically(1)){
+                        paginationLoadingView.visibility = View.VISIBLE
                         movieListViewModel.getMovieNextPage()
                     }
                 }
@@ -137,8 +139,7 @@ class MovieListFragment : Fragment(){
     }
     private fun displayLoading(){
         loadingView.visibility = View.VISIBLE
-        recyclerView.visibility = View.INVISIBLE
-        movieListViewModel.isPerformingQuery = true
+       // recyclerView.visibility = View.INVISIBLE
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
      return  when(item.itemId){

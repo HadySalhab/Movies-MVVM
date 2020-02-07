@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,21 +8,37 @@
 
     <include
         android:id="@+id/loading_view"
-        android:visibility="gone"
-        android:layout_gravity="top"
         layout="@layout/loading_list_item"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/recycler_loading_view_height"
-        android:layout_width="match_parent" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/pagination_loading_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loading_view"
         app:spanCount="3"
         tools:itemCount="100"
         tools:listitem="@layout/movie_list_item" />
 
+    <include
+        android:id="@+id/pagination_loading_view"
+        layout="@layout/loading_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/recycler_loading_view_height"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

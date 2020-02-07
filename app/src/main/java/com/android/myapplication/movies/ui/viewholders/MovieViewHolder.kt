@@ -1,4 +1,4 @@
-package com.android.myapplication.movies.ui
+package com.android.myapplication.movies.ui.viewholders
 
 import IMAGE_BASE_URL
 import IMAGE_FILE_SIZE
@@ -23,10 +23,13 @@ class MovieViewHolder private constructor(
 
 
     companion object{
-        fun getInstance(parent:ViewGroup,onMovieClickListener: () -> Unit):MovieViewHolder{
+        fun getInstance(parent:ViewGroup,onMovieClickListener: () -> Unit): MovieViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val itemView = inflater.inflate(R.layout.movie_list_item,parent,false)
-            return MovieViewHolder(itemView,onMovieClickListener)
+            return MovieViewHolder(
+                itemView,
+                onMovieClickListener
+            )
         }
     }
 
