@@ -39,6 +39,9 @@ class BaseApplication : Application() {
         single<AppExecutors>{
             AppExecutors()
         }
+        viewModel <DetailActivityViewModel>{
+            DetailActivityViewModel()
+        }
 
     }
 
