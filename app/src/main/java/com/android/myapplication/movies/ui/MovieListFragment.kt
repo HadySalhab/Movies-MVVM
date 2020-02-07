@@ -31,21 +31,6 @@ class MovieListFragment : Fragment() {
     private lateinit var paginationLoadingView: View
 
 
-    private var callbacks: Callbacks? = null
-
-    interface Callbacks {
-        fun onMovieListFragmentDisplayed()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +47,6 @@ class MovieListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        callbacks?.onMovieListFragmentDisplayed()
         fireRequest()
         movieListViewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
