@@ -3,22 +3,17 @@ package com.android.myapplication.movies.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-
 import com.android.myapplication.movies.R
+import com.android.myapplication.movies.persistence.PreferencesStorage
 import com.android.myapplication.movies.util.Categories
-import com.android.myapplication.movies.util.HorizontalDottedProgress
 import com.android.myapplication.movies.util.RecyclerViewDecoration
-import com.android.myapplication.popularmovies.api.model.Movie
-import kotlinx.android.synthetic.main.fragment_movie_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -68,7 +63,7 @@ class MovieListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         callbacks?.onMovieListFragmentDisplayed()
-        testRetrofitApi()
+        fireRequest()
         movieListViewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
                 hideDisplayLoading()
@@ -103,9 +98,20 @@ class MovieListFragment : Fragment() {
         }
     }
 
-    fun testRetrofitApi() {
-        getMovies(1, Categories.POPULAR)
+    private fun fireRequest(){
+        val query = PreferencesStorage.getStoredQuery(this.requireContext())
+        query?.let {
+            movieListViewModel.searchMovies(1,it)
+            return
+        }
+        val category = PreferencesStorage.getStoredCategory(this.requireContext())
+        when(category){
+            "popular"->getMovies(1,Categories.POPULAR)
+            "top_rated"->getMovies(1,Categories.TOP_RATED)
+            "upComing"->getMovies(1,Categories.UPCOMING)
+        }
     }
+
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
         movieListViewModel.query = null
@@ -155,16 +161,19 @@ class MovieListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
+                movieListViewModel.categories = Categories.UPCOMING
                 displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.UPCOMING)
                 true
             }
             R.id.menu_item_popular_movies -> {
+                movieListViewModel.categories = Categories.POPULAR
                 displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.POPULAR)
                 true
             }
             R.id.menu_item_top_rated -> {
+                movieListViewModel.categories = Categories.TOP_RATED
                 displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.TOP_RATED)
                 true
@@ -186,6 +195,20 @@ class MovieListFragment : Fragment() {
     }
 
     private val onMovieClickListener: () -> Unit = {
+    }
+
+    override fun onPause() {
+        super.onPause()
+        savePreferences()
+    }
+    fun savePreferences(){
+        PreferencesStorage.setStoredQuery(this.requireContext(),movieListViewModel.query)
+        val category = when(movieListViewModel.categories){
+            Categories.TOP_RATED->"top_rated"
+            Categories.UPCOMING->"upComing"
+            else->"popular"
+        }
+        PreferencesStorage.setStoredCategory(this.requireContext(),category)
     }
 }
 
