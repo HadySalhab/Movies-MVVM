@@ -101,6 +101,8 @@ class MovieListFragment : Fragment() {
     private fun fireRequest(){
         val query = PreferencesStorage.getStoredQuery(this.requireContext())
         query?.let {
+            //priority to queries
+            movieListViewModel.query = it
             movieListViewModel.searchMovies(1,it)
             return
         }
@@ -115,6 +117,7 @@ class MovieListFragment : Fragment() {
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
         movieListViewModel.query = null
+        movieListViewModel.categories = sortBy
         movieListViewModel.getMovies(pageNumber, sortBy)
     }
 
@@ -161,19 +164,16 @@ class MovieListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
-                movieListViewModel.categories = Categories.UPCOMING
                 displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.UPCOMING)
                 true
             }
             R.id.menu_item_popular_movies -> {
-                movieListViewModel.categories = Categories.POPULAR
                 displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.POPULAR)
                 true
             }
             R.id.menu_item_top_rated -> {
-                movieListViewModel.categories = Categories.TOP_RATED
                 displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.TOP_RATED)
                 true
