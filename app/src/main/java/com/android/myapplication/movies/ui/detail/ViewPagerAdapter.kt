@@ -10,7 +10,7 @@ import java.lang.IndexOutOfBoundsException
 
 const val REVIEW_LIST_PAGE_INDEX = 0
 const val TRAILER_LIST_PAGE_INDEX = 1
-class ViewPagerAdapter (activity:AppCompatActivity):FragmentStateAdapter(activity){
+class ViewPagerAdapter (fragment: Fragment):FragmentStateAdapter(fragment){
     private val tabFragmentsCreator: Map<Int, () -> Fragment> = mapOf(
         REVIEW_LIST_PAGE_INDEX to { ReviewsFragment() },
         TRAILER_LIST_PAGE_INDEX to { TrailersFragment() }

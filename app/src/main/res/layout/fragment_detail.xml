@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.android.myapplication.movies.ui.detail.DetailActivityViewModel" />
+            type="com.android.myapplication.movies.ui.detail.DetailFragmentViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

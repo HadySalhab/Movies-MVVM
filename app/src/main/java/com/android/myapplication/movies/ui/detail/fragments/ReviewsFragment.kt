@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.android.myapplication.movies.databinding.FragmentReviewsBinding
-import com.android.myapplication.movies.ui.detail.DetailActivityViewModel
+import com.android.myapplication.movies.ui.detail.DetailFragmentViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class ReviewsFragment : Fragment() {
     private lateinit var binding:FragmentReviewsBinding
-    private val viewModel:DetailActivityViewModel by viewModel()
+    private val viewModel:DetailFragmentViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

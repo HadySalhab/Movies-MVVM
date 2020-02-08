@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.android.myapplication.movies.ui.detail.DetailActivityViewModel" />
+            type="com.android.myapplication.movies.ui.detail.DetailFragmentViewModel" />
     </data>
 
     <FrameLayout

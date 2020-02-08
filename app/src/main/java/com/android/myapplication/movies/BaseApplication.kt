@@ -6,7 +6,7 @@ import com.android.myapplication.movies.api.MoviesApi
 import com.android.myapplication.movies.api.RemoteDataSource
 import com.android.myapplication.movies.repository.MoviesRepository
 import com.android.myapplication.movies.ui.MovieListViewModel
-import com.android.myapplication.movies.ui.detail.DetailActivityViewModel
+import com.android.myapplication.movies.ui.detail.DetailFragmentViewModel
 import com.android.myapplication.movies.util.RemoteToLocal
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -41,9 +41,9 @@ class BaseApplication : Application() {
         single<AppExecutors>{
             AppExecutors()
         }
-        viewModel <DetailActivityViewModel>{
+        viewModel <DetailFragmentViewModel>{
             val repository:MoviesRepository = get()
-            DetailActivityViewModel(
+            DetailFragmentViewModel(
                 this@BaseApplication,
                 repository,
                 RemoteToLocal()

@@ -15,9 +15,9 @@ import com.android.myapplication.movies.util.RemoteToLocal
 import com.android.myapplication.popularmovies.api.model.Video
 import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
 
-class DetailActivityViewModel(app: Application,
-    private val repository: MoviesRepository,
-    private val remoteToLocal: RemoteToLocal
+class DetailFragmentViewModel(app: Application,
+                              private val repository: MoviesRepository,
+                              private val remoteToLocal: RemoteToLocal
 ) : AndroidViewModel(app) {
     companion object {
         private const val TAG = "DetailActivityViewModel"
