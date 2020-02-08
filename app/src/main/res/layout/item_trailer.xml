@@ -6,8 +6,13 @@
         <variable
             name="video"
             type="com.android.myapplication.popularmovies.api.model.Video" />
+        <variable
+            name="viewHolder"
+            type="com.android.myapplication.movies.ui.detail.fragments.VideoAdapter.VideoViewHolder" />
     </data>
 <FrameLayout
+
+    android:layout_marginBottom="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -18,8 +23,8 @@
         android:layout_gravity="center"
         android:clickable="true"
         android:focusable="true"
-        android:layout_marginBottom="8dp"
         android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{()->viewHolder.onVideoClicked.invoke(video)}"
         app:cardCornerRadius="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout

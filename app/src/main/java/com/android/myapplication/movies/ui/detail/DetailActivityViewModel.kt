@@ -1,20 +1,31 @@
 package com.android.myapplication.movies.ui.detail
 
+import YOUTUBE_BASE_URL
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.*
 import com.android.myapplication.movies.repository.MoviesRepository
+import com.android.myapplication.movies.ui.detail.fragments.TrailersFragment
+import com.android.myapplication.movies.util.Event
 import com.android.myapplication.movies.util.RemoteToLocal
+import com.android.myapplication.popularmovies.api.model.Video
 import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
 
-class DetailActivityViewModel(
+class DetailActivityViewModel(app: Application,
     private val repository: MoviesRepository,
     private val remoteToLocal: RemoteToLocal
-) : ViewModel() {
+) : AndroidViewModel(app) {
     companion object {
         private const val TAG = "DetailActivityViewModel"
     }
+
+    private val _showVideo = MutableLiveData<Event<Unit>>()
+    val showVideo: LiveData<Event<Unit>>
+        get() = _showVideo
 
     val detailMovieResponse: LiveData<MovieDetailsResponse> = repository.detailMovieResponse
     fun getDetails(id: Long) {
@@ -39,5 +50,9 @@ class DetailActivityViewModel(
     }
     val isVideoListEmpty = Transformations.map(trailersDetails){ videos->
         videos.isNullOrEmpty()
+    }
+
+    fun onBackPosterClicked(){
+        _showVideo.value = Event(Unit)
     }
 }

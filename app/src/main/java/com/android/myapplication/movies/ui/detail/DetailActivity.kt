@@ -1,7 +1,9 @@
 package com.android.myapplication.movies.ui.detail
 
+import YOUTUBE_BASE_URL
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.android.myapplication.movies.R
 import com.android.myapplication.movies.databinding.ActivityDetailBinding
+import com.android.myapplication.movies.ui.detail.fragments.TrailersFragment
+import com.android.myapplication.movies.util.EventObserver
 import com.android.myapplication.movies.util.RecyclerViewDecoration
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -40,8 +44,27 @@ class DetailActivity : AppCompatActivity() {
         viewModel.detailMovieResponse.observe(this, Observer { response ->
             Log.d(
                 TAG, "onStart:${
-            response.id
+            response?.id
             } ")
+        })
+
+        viewModel.showVideo.observe(this,EventObserver{ _->
+            val videoList = viewModel.trailersDetails.value
+            if (!videoList.isNullOrEmpty()){
+                val video = videoList.get(0)
+                val videoKey = video.key
+                videoKey?.let {
+                    val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:${video.key}"))
+                    if (appIntent.resolveActivity(packageManager) != null) {
+                        startActivity(appIntent)
+                    } else {
+                        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_BASE_URL + video.key))
+                        if (webIntent.resolveActivity(packageManager) != null) {
+                            startActivity(webIntent)
+                        }
+                    }
+                }
+            }
         })
     }
 

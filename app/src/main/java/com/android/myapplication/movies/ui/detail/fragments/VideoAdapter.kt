@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.databinding.ItemTrailerBinding
 import com.android.myapplication.popularmovies.api.model.Video
 
-class VideoAdapter() :
+class VideoAdapter(private val onVideoClicked:(Video)->Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Video>() {
@@ -27,7 +27,7 @@ class VideoAdapter() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return VideoViewHolder.getInstance(parent)
+        return VideoViewHolder.getInstance(parent,onVideoClicked)
 
     }
 
@@ -47,18 +47,19 @@ class VideoAdapter() :
         differ.submitList(list)
     }
 
-    class VideoViewHolder private constructor(private val binding:ItemTrailerBinding) :
+    class VideoViewHolder private constructor(private val binding:ItemTrailerBinding,val onVideoClicked:(Video)->Unit) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun getInstance(parent: ViewGroup): VideoViewHolder {
+            fun getInstance(parent: ViewGroup,onVideoClicked:(Video)->Unit): VideoViewHolder {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemTrailerBinding.inflate(inflater,parent,false)
-                return VideoViewHolder(binding)
+                return VideoViewHolder(binding,onVideoClicked)
             }
         }
 
         fun bind(review: Video) {
             binding.video = review
+            binding.viewHolder = this
         }
     }
 }

@@ -44,6 +44,7 @@ class BaseApplication : Application() {
         viewModel <DetailActivityViewModel>{
             val repository:MoviesRepository = get()
             DetailActivityViewModel(
+                this@BaseApplication,
                 repository,
                 RemoteToLocal()
             )
