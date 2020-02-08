@@ -5,8 +5,9 @@ import android.app.Application
 import com.android.myapplication.movies.api.MoviesApi
 import com.android.myapplication.movies.api.RemoteDataSource
 import com.android.myapplication.movies.repository.MoviesRepository
-import com.android.myapplication.movies.ui.MovieListViewModel
-import com.android.myapplication.movies.ui.detail.DetailFragmentViewModel
+import com.android.myapplication.movies.ui.list.MovieListViewModel
+import com.android.myapplication.movies.ui.detail.fragments.DetailFragmentViewModel
+import com.android.myapplication.movies.util.AppExecutors
 import com.android.myapplication.movies.util.RemoteToLocal
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -26,10 +27,12 @@ class BaseApplication : Application() {
         }
         viewModel<MovieListViewModel> {
             val repository:MoviesRepository = get()
-            MovieListViewModel(repository)
+            MovieListViewModel(
+                repository
+            )
         }
         single<RemoteDataSource> {
-            val appExecutors:AppExecutors=get()
+            val appExecutors: AppExecutors =get()
             val moviesApi:MoviesApi = get()
             RemoteDataSource(appExecutors,moviesApi)
         }

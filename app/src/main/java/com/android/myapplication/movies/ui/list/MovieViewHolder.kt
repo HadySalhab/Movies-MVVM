@@ -1,4 +1,4 @@
-package com.android.myapplication.movies.ui.viewholders
+package com.android.myapplication.movies.ui.list
 
 import IMAGE_BASE_URL
 import IMAGE_FILE_SIZE

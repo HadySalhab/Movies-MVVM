@@ -1,15 +1,16 @@
-package com.android.myapplication.movies
+package com.android.myapplication.movies.ui.list
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.android.myapplication.movies.R
 import com.android.myapplication.movies.api.MoviesApi
-import com.android.myapplication.movies.ui.MovieListFragment
 import com.android.myapplication.movies.ui.detail.DetailActivity
 import org.koin.android.ext.android.inject
 
-class MainActivity :AppCompatActivity(),MovieListFragment.Callbacks{
+class MainActivity :AppCompatActivity(),
+    MovieListFragment.Callbacks{
     val movieApi:MoviesApi by inject()
     private lateinit var toolbar:Toolbar
     companion object {
@@ -25,7 +26,9 @@ class MainActivity :AppCompatActivity(),MovieListFragment.Callbacks{
         if (isFragmentContainerEmpty) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.main_container, MovieListFragment())
+                .add(R.id.main_container,
+                    MovieListFragment()
+                )
                 .commit()
         }
     }

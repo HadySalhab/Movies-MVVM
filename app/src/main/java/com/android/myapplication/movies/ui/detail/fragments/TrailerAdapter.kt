@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.databinding.ItemTrailerBinding
 import com.android.myapplication.popularmovies.api.model.Video
 
-class VideoAdapter(private val onVideoClicked:(Video)->Unit) :
+class TrailerAdapter(private val onVideoClicked:(Video)->Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Video>() {

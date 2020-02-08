@@ -1,4 +1,4 @@
-package com.android.myapplication.movies
+package com.android.myapplication.movies.util
 
 import java.util.concurrent.Executors
 

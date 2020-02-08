@@ -1,8 +1,7 @@
-package com.android.myapplication.movies.ui
+package com.android.myapplication.movies.ui.list
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -80,7 +79,10 @@ class MovieListFragment : Fragment() {
 
     private fun initRecyclerView() {
         recyclerView.apply {
-            this@MovieListFragment.adapter = MoviesRecyclerAdapter(onMovieClickListener)
+            this@MovieListFragment.adapter =
+                MoviesRecyclerAdapter(
+                    onMovieClickListener
+                )
             addItemDecoration(RecyclerViewDecoration())
             adapter = this@MovieListFragment.adapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {

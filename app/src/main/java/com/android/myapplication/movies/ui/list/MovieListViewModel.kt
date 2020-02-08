@@ -1,4 +1,4 @@
-package com.android.myapplication.movies.ui
+package com.android.myapplication.movies.ui.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

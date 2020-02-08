@@ -8,7 +8,7 @@
             type="com.android.myapplication.popularmovies.api.model.Video" />
         <variable
             name="viewHolder"
-            type="com.android.myapplication.movies.ui.detail.fragments.VideoAdapter.VideoViewHolder" />
+            type="com.android.myapplication.movies.ui.detail.fragments.TrailerAdapter.VideoViewHolder" />
     </data>
 <FrameLayout
 

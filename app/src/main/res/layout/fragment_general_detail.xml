@@ -5,12 +5,16 @@
     <data>
         <variable
             name="viewModel"
-            type="com.android.myapplication.movies.ui.detail.DetailFragmentViewModel" />
+            type="com.android.myapplication.movies.ui.detail.fragments.DetailFragmentViewModel" />
     </data>
-
+<ScrollView
+    android:nestedScrollingEnabled="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants">
 
         <androidx.constraintlayout.widget.Guideline
@@ -210,53 +214,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/label_overview"
             tools:text="@tools:sample/lorem" />
-
-        <TextView
-            android:id="@+id/label_cast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:text="Cast"
-            android:textColor="@color/primaryTextColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_overview" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_cast"
-            app:castAdapterList="@{viewModel.castDetails}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:clipToPadding="false"
-            android:paddingEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/label_cast" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_marginTop="16dp"
-            style="@style/Widget.MaterialComponents.TabLayout.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:tabIconTint="@drawable/tab_icon_color_selector"
-            android:backgroundTint="@color/colorAccent"
-            app:tabTextColor="@color/primaryTextColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_cast"
-            />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabs">
-
-        </androidx.viewpager2.widget.ViewPager2>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
 </layout>

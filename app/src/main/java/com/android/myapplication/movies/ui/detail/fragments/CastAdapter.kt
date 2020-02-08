@@ -1,12 +1,10 @@
-package com.android.myapplication.movies.ui.detail
+package com.android.myapplication.movies.ui.detail.fragments
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import com.android.myapplication.movies.R
 import com.android.myapplication.movies.databinding.ItemCastBinding
 import com.android.myapplication.popularmovies.api.model.Cast
 
@@ -27,7 +25,9 @@ class CastAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return CastViewHolder.getInstance(parent)
+        return CastViewHolder.getInstance(
+            parent
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -52,7 +52,9 @@ class CastAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             fun getInstance(parent: ViewGroup): CastViewHolder {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemCastBinding.inflate(inflater,parent,false)
-                return CastViewHolder(binding)
+                return CastViewHolder(
+                    binding
+                )
             }
         }
 

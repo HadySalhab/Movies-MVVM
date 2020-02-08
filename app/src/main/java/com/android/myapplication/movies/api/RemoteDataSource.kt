@@ -4,7 +4,7 @@ import NETWORK_TIMEOUT
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.android.myapplication.movies.AppExecutors
+import com.android.myapplication.movies.util.AppExecutors
 import com.android.myapplication.movies.util.Categories
 import com.android.myapplication.popularmovies.api.model.Movie
 import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse

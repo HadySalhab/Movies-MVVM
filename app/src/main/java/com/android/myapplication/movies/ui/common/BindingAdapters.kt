@@ -1,4 +1,4 @@
-package com.android.myapplication.movies.ui
+package com.android.myapplication.movies.ui.common
 
 import IMAGE_BACKDROP_FILE_SIZE
 import IMAGE_BASE_URL
@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.R
-import com.android.myapplication.movies.ui.detail.CastAdapter
+import com.android.myapplication.movies.ui.detail.fragments.CastAdapter
 import com.android.myapplication.movies.ui.detail.fragments.ReviewAdapter
-import com.android.myapplication.movies.ui.detail.fragments.VideoAdapter
+import com.android.myapplication.movies.ui.detail.fragments.TrailerAdapter
 import com.android.myapplication.popularmovies.api.model.Cast
 import com.android.myapplication.popularmovies.api.model.Genre
 import com.android.myapplication.popularmovies.api.model.Review
@@ -80,7 +80,6 @@ fun RecyclerView.submitList(casts: List<Cast>?) {
         adapter.submitList(casts)
     }
 }
-
 @BindingAdapter("reviewAdapterList")
 fun RecyclerView.submitReviewList(reviews: List<Review>?) {
     val adapter = this.adapter as ReviewAdapter
@@ -91,8 +90,16 @@ fun RecyclerView.submitReviewList(reviews: List<Review>?) {
 
 @BindingAdapter("videoAdapterList")
 fun RecyclerView.submitVideoList(videos: List<Video>?) {
-    val adapter = this.adapter as VideoAdapter
+    val adapter = this.adapter as TrailerAdapter
     videos?.let {
         adapter.submitList(videos)
+    }
+}
+
+@BindingAdapter("castAdapterList")
+fun RecyclerView.submitCastList(casts: List<Cast>?) {
+    val adapter = this.adapter as CastAdapter
+    casts?.let {
+        adapter.submitList(casts)
     }
 }

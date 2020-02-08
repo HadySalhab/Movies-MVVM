@@ -1,20 +1,8 @@
-package com.android.myapplication.movies.ui
+package com.android.myapplication.movies.ui.list
 
-import IMAGE_BASE_URL
-import IMAGE_FILE_SIZE
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import com.android.myapplication.movies.R
-import com.android.myapplication.movies.ui.viewholders.MovieViewHolder
 import com.android.myapplication.popularmovies.api.model.Movie
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.movie_list_item.view.*
 
 class MoviesRecyclerAdapter (private val onMovieClickListener:(Movie)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var movies:MutableList<Movie> = mutableListOf()
@@ -33,7 +21,7 @@ class MoviesRecyclerAdapter (private val onMovieClickListener:(Movie)->Unit): Re
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
-            is MovieViewHolder->{
+            is MovieViewHolder ->{
                 holder.bind(movies.get(position))
             }
         }

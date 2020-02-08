@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.android.myapplication.movies.databinding.FragmentTrailerBinding
-import com.android.myapplication.movies.ui.detail.DetailFragmentViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -38,7 +37,7 @@ class TrailersFragment : Fragment() {
     private fun initRecyclerView() {
         val recyclerView = binding.listVideos
         recyclerView.apply {
-            adapter = VideoAdapter{ video ->
+            adapter = TrailerAdapter{ video ->
                 val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:${video.key}"))
                 if (appIntent.resolveActivity(requireActivity().packageManager) != null) {
                     startActivity(appIntent)

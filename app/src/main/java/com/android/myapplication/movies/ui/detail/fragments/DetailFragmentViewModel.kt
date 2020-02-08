@@ -1,18 +1,11 @@
-package com.android.myapplication.movies.ui.detail
+package com.android.myapplication.movies.ui.detail.fragments
 
-import YOUTUBE_BASE_URL
 import android.app.Application
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.*
 import com.android.myapplication.movies.repository.MoviesRepository
-import com.android.myapplication.movies.ui.detail.fragments.TrailersFragment
 import com.android.myapplication.movies.util.Event
 import com.android.myapplication.movies.util.RemoteToLocal
-import com.android.myapplication.popularmovies.api.model.Video
 import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
 
 class DetailFragmentViewModel(app: Application,
