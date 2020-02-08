@@ -26,7 +26,6 @@ class DetailFragmentViewModel(app: Application,
     }
 
     val movieDetail = Transformations.map(detailMovieResponse) { detailMovieResponse ->
-        Log.d(TAG, "${remoteToLocal.getMovieDetails(detailMovieResponse)} ")
         remoteToLocal.getMovieDetails(detailMovieResponse)
     }
     val castDetails = Transformations.map(detailMovieResponse){detailMovieResponse->

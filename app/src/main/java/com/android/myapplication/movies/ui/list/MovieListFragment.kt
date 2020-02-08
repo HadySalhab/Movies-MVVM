@@ -31,6 +31,7 @@ class MovieListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var loadingView: View
     private lateinit var paginationLoadingView: View
+    private lateinit var errorScreen:View
 
     private var callbacks: Callbacks? = null
 
@@ -56,6 +57,7 @@ class MovieListFragment : Fragment() {
         recyclerView = rootView.findViewById(R.id.recyclerview)
         loadingView = rootView.findViewById(R.id.loading_view)
         paginationLoadingView = rootView.findViewById(R.id.pagination_loading_view)
+        errorScreen = rootView.findViewById(R.id.error_screen)
         initRecyclerView()
         setHasOptionsMenu(true)
         return rootView
@@ -68,13 +70,39 @@ class MovieListFragment : Fragment() {
             movies?.let {
                 hideDisplayLoading()
                 adapter.submitList(movies)
+                movieListViewModel.areMoviesRetrieved = true
+                hideErrorScreen()
             }
         })
+        movieListViewModel.retrieveMoviesTimeOut.observe(viewLifecycleOwner, Observer {isTimedOut->
+                if(isTimedOut && !movieListViewModel.areMoviesRetrieved){
+                    showErrorScreen()
+                }
+            })
+    }
+    fun showErrorScreen(){
+        errorScreen.visibility = View.VISIBLE
+        loadingView.visibility = View.GONE
+        paginationLoadingView.visibility = View.GONE
+        recyclerView.visibility = View.INVISIBLE
+   }
+    fun hideErrorScreen(){
+        errorScreen.visibility = View.GONE
+        loadingView.visibility = View.GONE
+        paginationLoadingView.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
     }
 
     private fun hideDisplayLoading() {
         loadingView.visibility = View.GONE
         paginationLoadingView.visibility = View.GONE
+    }
+
+
+    private fun showDisplayLoading() {
+        movieListViewModel.areMoviesRetrieved =false
+        loadingView.visibility = View.VISIBLE
+        errorScreen.visibility = View.GONE
     }
 
     private fun initRecyclerView() {
@@ -104,7 +132,7 @@ class MovieListFragment : Fragment() {
     private fun fireRequest() {
         val query = PreferencesStorage.getStoredQuery(this.requireContext())
         query?.let {
-            //priority to queries
+            showDisplayLoading()
             movieListViewModel.query = it
             movieListViewModel.searchMovies(1, it)
             return
@@ -119,6 +147,7 @@ class MovieListFragment : Fragment() {
 
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
+        showDisplayLoading()
         movieListViewModel.query = null
         movieListViewModel.categories = sortBy
         movieListViewModel.getMovies(pageNumber, sortBy)
@@ -137,7 +166,7 @@ class MovieListFragment : Fragment() {
             queryHint = context.getString(R.string.query_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    displayLoading()
+                    showDisplayLoading()
 
                     query?.let {
                         movieListViewModel.query = it
@@ -159,25 +188,18 @@ class MovieListFragment : Fragment() {
 
     }
 
-    private fun displayLoading() {
-        loadingView.visibility = View.VISIBLE
-        // recyclerView.visibility = View.INVISIBLE
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
-                displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.UPCOMING)
                 true
             }
             R.id.menu_item_popular_movies -> {
-                displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.POPULAR)
                 true
             }
             R.id.menu_item_top_rated -> {
-                displayLoading()
                 getMovies(pageNumber = 1, sortBy = Categories.TOP_RATED)
                 true
             }

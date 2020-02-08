@@ -10,8 +10,9 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
 
     var query:String?=null
     var categories:Categories = Categories.POPULAR
-
+    var areMoviesRetrieved = false
     val movieList: LiveData<List<Movie>> = repository.movieList
+    val retrieveMoviesTimeOut = repository.retrieveMoviesTimeOut
 
     fun getMovies(pageNumber: Int, sortBy: Categories) {
         repository.getMovies(pageNumber, sortBy)

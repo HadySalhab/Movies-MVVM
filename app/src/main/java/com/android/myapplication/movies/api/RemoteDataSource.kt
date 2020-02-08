@@ -33,6 +33,10 @@ public class RemoteDataSource(
     val detailsResponse:LiveData<MovieDetailsResponse>
     get() = _detailsResponse
 
+    private val _retrieveMoviesTimeOut = MutableLiveData<Boolean>()
+    val retrieveMoviesTimeOut:LiveData<Boolean>
+    get() = _retrieveMoviesTimeOut
+
     fun getMovies(pageNumber: Int, sortBy: Categories) {
         reset()
         retrieveMoviesRunnable = RetrieveMoviesRunnable(pageNumber = pageNumber, sortBy = sortBy)
@@ -40,6 +44,7 @@ public class RemoteDataSource(
         val handler = appExecutors.networkIO.submit(retrieveMoviesRunnable)
 
         appExecutors.networkIO.schedule(Runnable {
+            _retrieveMoviesTimeOut.postValue(true)
             handler.cancel(true)
         }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS)
     }
@@ -51,6 +56,7 @@ public class RemoteDataSource(
         val handler = appExecutors.networkIO.submit(searchMovieRunnable)
 
         appExecutors.networkIO.schedule(Runnable {
+            _retrieveMoviesTimeOut.postValue(true)
             handler.cancel(true)
         }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS)
     }
