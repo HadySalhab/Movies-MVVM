@@ -1,32 +1,26 @@
 package com.android.myapplication.movies.ui.list
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.myapplication.movies.repository.MoviesRepository
 import com.android.myapplication.movies.util.Categories
 import com.android.myapplication.popularmovies.api.model.Movie
 
 class MovieListViewModel(private val repository: MoviesRepository) : ViewModel() {
-
-    var query:String?=null
-    var categories:Categories = Categories.POPULAR
-    var areMoviesRetrieved = false
-    val movieList: LiveData<List<Movie>> = repository.movieList
-    val retrieveMoviesTimeOut = repository.retrieveMoviesTimeOut
-
-    fun getMovies(pageNumber: Int, sortBy: Categories) {
-        repository.getMovies(pageNumber, sortBy)
+    enum class ListViewState {
+        POPULAR,
+        TOP_RATED,
+        UPCOMING,
+        SEARCH
     }
 
-    fun searchMovies(pageNumber: Int, query: String) {
-        repository.searchMovies(pageNumber, query)
-    }
+    private val _viewState = MutableLiveData<ListViewState>()
+    val viewState: LiveData<ListViewState>
+        get() = _viewState
 
-    fun getMovieNextPage(){
-        repository.getMovieNextPage()
-    }
-    fun searchNextPage(){
-        repository.searchNextPage()
-    }
 
+    init {
+        _viewState.value = ListViewState.POPULAR
+    }
 }

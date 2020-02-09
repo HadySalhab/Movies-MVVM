@@ -31,12 +31,12 @@ class MovieListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var loadingView: View
     private lateinit var paginationLoadingView: View
-    private lateinit var errorScreen:View
+    private lateinit var errorScreen: View
 
     private var callbacks: Callbacks? = null
 
     interface Callbacks {
-        fun onMovieClick(movieId:Long)
+        fun onMovieClick(movieId: Long)
     }
 
     override fun onAttach(context: Context) {
@@ -63,48 +63,6 @@ class MovieListFragment : Fragment() {
         return rootView
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        fireRequest()
-        movieListViewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
-            movies?.let {
-                hideDisplayLoading()
-                adapter.submitList(movies)
-                movieListViewModel.areMoviesRetrieved = true
-                hideErrorScreen()
-            }
-        })
-        movieListViewModel.retrieveMoviesTimeOut.observe(viewLifecycleOwner, Observer {isTimedOut->
-                if(isTimedOut && !movieListViewModel.areMoviesRetrieved){
-                    showErrorScreen()
-                }
-            })
-    }
-    fun showErrorScreen(){
-        errorScreen.visibility = View.VISIBLE
-        loadingView.visibility = View.GONE
-        paginationLoadingView.visibility = View.GONE
-        recyclerView.visibility = View.INVISIBLE
-   }
-    fun hideErrorScreen(){
-        errorScreen.visibility = View.GONE
-        loadingView.visibility = View.GONE
-        paginationLoadingView.visibility = View.GONE
-        recyclerView.visibility = View.VISIBLE
-    }
-
-    private fun hideDisplayLoading() {
-        loadingView.visibility = View.GONE
-        paginationLoadingView.visibility = View.GONE
-    }
-
-
-    private fun showDisplayLoading() {
-        movieListViewModel.areMoviesRetrieved =false
-        loadingView.visibility = View.VISIBLE
-        errorScreen.visibility = View.GONE
-    }
-
     private fun initRecyclerView() {
         recyclerView.apply {
             this@MovieListFragment.adapter =
@@ -113,45 +71,41 @@ class MovieListFragment : Fragment() {
                 )
             addItemDecoration(RecyclerViewDecoration())
             adapter = this@MovieListFragment.adapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (!recyclerView.canScrollVertically(1)) {
-                        paginationLoadingView.visibility = View.VISIBLE
-                        if (movieListViewModel.query == null) {
-                            movieListViewModel.getMovieNextPage()
-                        } else {
-                            movieListViewModel.searchNextPage()
-                        }
-                    }
+
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        movieListViewModel.viewState.observe(viewLifecycleOwner,Observer{ viewState ->
+            when(viewState){
+                MovieListViewModel.ListViewState.POPULAR->{
+                    getPopularMovies()
                 }
-            })
-        }
+                MovieListViewModel.ListViewState.TOP_RATED->{
+
+                }
+                MovieListViewModel.ListViewState.UPCOMING->{
+
+                }
+                MovieListViewModel.ListViewState.SEARCH->{
+
+                }
+                else->{
+                    getPopularMovies()
+                }
+            }
+        })
     }
 
-    private fun fireRequest() {
-        val query = PreferencesStorage.getStoredQuery(this.requireContext())
-        query?.let {
-            showDisplayLoading()
-            movieListViewModel.query = it
-            movieListViewModel.searchMovies(1, it)
-            return
-        }
-        val category = PreferencesStorage.getStoredCategory(this.requireContext())
-        when (category) {
-            "popular" -> getMovies(1, Categories.POPULAR)
-            "top_rated" -> getMovies(1, Categories.TOP_RATED)
-            "upComing" -> getMovies(1, Categories.UPCOMING)
-        }
+    fun getPopularMovies(){
+
     }
 
-
-    fun getMovies(pageNumber: Int, sortBy: Categories) {
-        showDisplayLoading()
-        movieListViewModel.query = null
-        movieListViewModel.categories = sortBy
-        movieListViewModel.getMovies(pageNumber, sortBy)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -166,16 +120,10 @@ class MovieListFragment : Fragment() {
             queryHint = context.getString(R.string.query_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    showDisplayLoading()
-
-                    query?.let {
-                        movieListViewModel.query = it
-                        movieListViewModel.searchMovies(1, it)
-                    }
                     onActionViewCollapsed()
                     searchItem.collapseActionView()
                     hideSoftKeyboard()
-                    return true
+                    return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
@@ -192,15 +140,12 @@ class MovieListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
-                getMovies(pageNumber = 1, sortBy = Categories.UPCOMING)
                 true
             }
             R.id.menu_item_popular_movies -> {
-                getMovies(pageNumber = 1, sortBy = Categories.POPULAR)
                 true
             }
             R.id.menu_item_top_rated -> {
-                getMovies(pageNumber = 1, sortBy = Categories.TOP_RATED)
                 true
             }
 
@@ -219,17 +164,17 @@ class MovieListFragment : Fragment() {
         }
     }
 
-    private val onMovieClickListener: (movie: Movie) -> Unit = { movie->
+    private val onMovieClickListener: (movie: Movie) -> Unit = { movie ->
         Log.d(TAG, "onMovieClick: ${callbacks} ")
         callbacks?.onMovieClick(movie.id)
     }
 
     override fun onPause() {
         super.onPause()
-        savePreferences()
+        //savePreferences()
     }
 
-    fun savePreferences() {
+/*    fun savePreferences() {
         PreferencesStorage.setStoredQuery(this.requireContext(), movieListViewModel.query)
         val category = when (movieListViewModel.categories) {
             Categories.TOP_RATED -> "top_rated"
@@ -237,7 +182,7 @@ class MovieListFragment : Fragment() {
             else -> "popular"
         }
         PreferencesStorage.setStoredCategory(this.requireContext(), category)
-    }
+    }*/
 }
 
 
