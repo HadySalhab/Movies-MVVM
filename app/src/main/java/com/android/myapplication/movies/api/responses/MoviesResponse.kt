@@ -3,7 +3,8 @@ package com.android.myapplication.popularmovies.api.responses
 import com.android.myapplication.popularmovies.api.model.Movie
 import com.google.gson.annotations.SerializedName
 
-public class MoviesResponse{
+//response for search,popular,top-rated & upcoming requests
+class MoviesResponse{
 
     @SerializedName("page")
     var page:Int=1
