@@ -12,7 +12,7 @@ class DetailFragmentViewModel(app: Application,
                               private val repository: MoviesRepository,
                               private val remoteToLocal: RemoteToLocal
 ) : AndroidViewModel(app) {
-    companion object {
+   /* companion object {
         private const val TAG = "DetailActivityViewModel"
     }
 
@@ -46,5 +46,5 @@ class DetailFragmentViewModel(app: Application,
 
     fun onBackPosterClicked(){
         _showVideo.value = Event(Unit)
-    }
+    }*/
 }

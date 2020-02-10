@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.R
-import com.android.myapplication.movies.persistence.PreferencesStorage
-import com.android.myapplication.movies.util.Categories
+import com.android.myapplication.movies.util.Category
 import com.android.myapplication.movies.util.RecyclerViewDecoration
 import com.android.myapplication.popularmovies.api.model.Movie
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,7 +57,7 @@ class MovieListFragment : Fragment() {
         loadingView = rootView.findViewById(R.id.loading_view)
         paginationLoadingView = rootView.findViewById(R.id.pagination_loading_view)
         errorScreen = rootView.findViewById(R.id.error_screen)
-        initRecyclerView()
+      //  initRecyclerView()
         setHasOptionsMenu(true)
         return rootView
     }
@@ -77,35 +76,21 @@ class MovieListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        movieListViewModel.getListMovie(1,Category.TOPRATED)
         subscribeObservers()
     }
 
     private fun subscribeObservers() {
-        movieListViewModel.viewState.observe(viewLifecycleOwner,Observer{ viewState ->
-            when(viewState){
-                MovieListViewModel.ListViewState.POPULAR->{
-                    getPopularMovies()
-                }
-                MovieListViewModel.ListViewState.TOP_RATED->{
-
-                }
-                MovieListViewModel.ListViewState.UPCOMING->{
-
-                }
-                MovieListViewModel.ListViewState.SEARCH->{
-
-                }
-                else->{
-                    getPopularMovies()
+        movieListViewModel.movies.observe(viewLifecycleOwner, Observer { resourcelistMovies->
+            Log.d(TAG, "on Changed: ${resourcelistMovies.status}")
+            resourcelistMovies.data?.let {data->
+                Log.d(TAG, "data: ${data.size}")
+                data.forEach {
+                    Log.d(TAG, "subscribeObservers: ${it}")
                 }
             }
         })
     }
-
-    fun getPopularMovies(){
-
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)

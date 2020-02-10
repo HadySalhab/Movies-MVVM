@@ -12,3 +12,4 @@ const val PAGE_VIDEOS= 1
 const val PAGE_REVIEW =2
 const val PAGE_CAST=3
 const val PAGE_COUNT = 4
+const val DATABASE_NAME = "movies.db"

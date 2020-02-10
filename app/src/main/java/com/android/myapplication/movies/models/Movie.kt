@@ -50,7 +50,11 @@ data class Movie(
     val overview: String? = null,
 
     @ColumnInfo(name = "category")
-    val categoryType:Category = Category.POPULAR
+    val categoryType:Category = Category.POPULAR,
+
+    @ColumnInfo(name = "timestamp")
+    val timestamp:Int=0
+
 
 ):Parcelable{
     override fun equals(other: Any?): Boolean {

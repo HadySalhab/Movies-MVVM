@@ -1,13 +1,12 @@
 package com.android.myapplication.movies.util
 
-import com.android.myapplication.movies.models.local.MovieDetail
 import com.android.myapplication.popularmovies.api.model.Cast
 import com.android.myapplication.popularmovies.api.model.Review
 import com.android.myapplication.popularmovies.api.model.Video
 import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
 
 class RemoteToLocal {
-
+/*
     fun getMovieDetails(movieDetailsResponse: MovieDetailsResponse): MovieDetail {
         return MovieDetail(
             id = movieDetailsResponse.id,
@@ -38,5 +37,5 @@ class RemoteToLocal {
     fun getTrailerDetails(movieDetailsResponse: MovieDetailsResponse): List<Video>? {
         val videoResponse = movieDetailsResponse.videoResponse
         return videoResponse?.videos
-    }
+    }*/
 }

@@ -25,7 +25,6 @@ class CastFragment : Fragment() {
     ): View? {
         binding = FragmentCastBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
         initRecyclerView()
         return binding.root
     }

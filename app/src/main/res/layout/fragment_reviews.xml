@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:reviewAdapterList="@{viewModel.reviewsDetails}"/>
+/>
 
         <TextView
             android:layout_width="300dp"
@@ -30,6 +30,6 @@
             android:text="No Available Review At The Moment"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textColor="@color/colorAccent"
-            android:visibility="@{viewModel.isReviewListEmpty ? View.VISIBLE : View.GONE }" />
+            />
     </FrameLayout>
 </layout>

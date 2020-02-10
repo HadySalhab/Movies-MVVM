@@ -3,6 +3,7 @@ package com.android.myapplication.popularmovies.api.model
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 
 @Entity(tableName = "video",
@@ -10,12 +11,13 @@ import com.google.gson.annotations.SerializedName
         parentColumns = ["id"],
         childColumns = ["movie_id"],
         onDelete = CASCADE,
-        onUpdate = CASCADE)])
+        onUpdate = CASCADE)],
+    indices = [Index(value = ["movie_id"])])
 
 data class Video(
     @PrimaryKey
     @SerializedName("id")
-    val id:String?=null,
+    val id:String=UUID.randomUUID().toString(),
     @ColumnInfo(name = "movie_id")
     var movieId: Long = 0,
     @SerializedName("key")

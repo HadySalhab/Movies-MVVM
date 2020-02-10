@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.android.myapplication.movies.models.MovieAndDetails
-import com.android.myapplication.movies.persistence.dao.MovieAndDetailsDao
+import com.android.myapplication.movies.persistence.dao.*
 import com.android.myapplication.popularmovies.api.model.Cast
 import com.android.myapplication.popularmovies.api.model.Movie
 import com.android.myapplication.popularmovies.api.model.Review
@@ -17,5 +17,9 @@ import com.android.myapplication.popularmovies.api.model.Video
 )
 @TypeConverters(Converter::class)
 abstract class MovieDB : RoomDatabase() {
-    abstract val movieDao: MovieAndDetailsDao
+    abstract val movieDao: MovieAndDetailDao
+    abstract val videoDao:VideoDao
+    abstract val castDao:CastDao
+    abstract val reviewDao:ReviewDao
+
 }

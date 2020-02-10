@@ -1,7 +1,6 @@
 package com.android.myapplication.movies.persistence
 
 import android.content.Context
-import com.android.myapplication.movies.util.Categories
 
 private const val PREF_CATEGORY = "pref_category"
 private const val PREF_QUERY = "pref_query"

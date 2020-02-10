@@ -5,11 +5,7 @@
 
     <data>
 
-        <import type="android.view.View" />
 
-        <variable
-            name="viewModel"
-            type="com.android.myapplication.movies.ui.detail.fragments.DetailFragmentViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -47,9 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:fitsSystemWindows="true"
-                    android:onClick="@{()->viewModel.onBackPosterClicked()}"
                     android:scaleType="centerCrop"
-                    app:backgroundImage="@{viewModel.movieDetail.backdropPath}"
                     app:layout_collapseMode="parallax"
                     tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -58,8 +52,7 @@
                     android:layout_width="@dimen/play_placeholder_size"
                     android:layout_height="@dimen/play_placeholder_size"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:background="@drawable/play_circle"
-                    android:visibility="@{viewModel.isVideoListEmpty() ? View.GONE : View.VISIBLE}" />
+                    android:background="@drawable/play_circle"/>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"

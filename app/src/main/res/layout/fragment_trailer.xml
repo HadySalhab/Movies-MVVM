@@ -21,7 +21,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:videoAdapterList="@{viewModel.trailersDetails}" />
+ />
 
         <TextView
             android:layout_width="300dp"
@@ -30,7 +30,6 @@
             android:gravity="center"
             android:text="No Available Trailers At The Moment"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-            android:textColor="@color/colorAccent"
-            android:visibility="@{viewModel.isVideoListEmpty() ? View.VISIBLE : View.GONE }" />
+            android:textColor="@color/colorAccent" />
     </FrameLayout>
 </layout>

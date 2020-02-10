@@ -30,7 +30,6 @@
                 android:id="@+id/image_author"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                app:frontImage="@{cast.profilePath}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@{cast.name}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/primaryTextColor"
                 app:layout_constraintBottom_toTopOf="@+id/text_content"
@@ -54,7 +52,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/cast_as_character(cast.character)}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textColor="@color/primaryTextColor"
                 app:layout_constraintBottom_toBottomOf="@+id/image_author"

@@ -106,7 +106,7 @@ abstract class NetworkBoundResource<CacheObject, RequestObject>
 
     //Called to Save the Data coming from the api into the database
     @WorkerThread
-    protected abstract fun saveCallResult(item: RequestObject)
+    protected abstract fun saveCallResult(item: RequestObject?)
 
     //Called with the data in the DATABASE to decide whether to fetch
     @MainThread

@@ -57,7 +57,7 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainDetailBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
+        //binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         initViewPager()
         return binding.root
@@ -65,11 +65,11 @@ class DetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        registerObserver()
-        getDetails(id)
+       /* registerObserver()
+        getDetails(id)*/
     }
 
-    fun registerObserver() {
+   /* fun registerObserver() {
         viewModel.showVideo.observe(this, EventObserver {
             val videoList = viewModel.trailersDetails.value
             if (!videoList.isNullOrEmpty()) {
@@ -90,7 +90,7 @@ class DetailFragment : Fragment() {
                 }
             }
         })
-    }
+    }*/
 
     fun initViewPager() {
         viewPager = binding.contentDetail.viewpager
@@ -125,10 +125,10 @@ class DetailFragment : Fragment() {
             else -> null
         }
     }
-
+/*
     fun getDetails(id: Long?) {
         id?.let {
             viewModel.getDetails(id)
         }
-    }
+    }*/
 }

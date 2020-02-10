@@ -40,7 +40,6 @@
                 android:layout_marginStart="16dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/primaryTextColor"
-                android:text="@{reviews.author}"
                 app:layout_constraintStart_toEndOf="@+id/image_author"
                 app:layout_constraintTop_toTopOf="@+id/image_author"
                 tools:text="@tools:sample/full_names" />
@@ -52,7 +51,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@{reviews.content}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textColor="@color/primaryTextColor"
                 app:layout_constraintBottom_toBottomOf="parent"
