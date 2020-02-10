@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.R
+import com.android.myapplication.movies.databinding.FragmentMovieListBinding
 import com.android.myapplication.movies.util.Category
 import com.android.myapplication.movies.util.RecyclerViewDecoration
 import com.android.myapplication.popularmovies.api.model.Movie
@@ -27,10 +28,7 @@ class MovieListFragment : Fragment() {
 
     private val movieListViewModel by viewModel<MovieListViewModel>()
     private lateinit var adapter: MoviesRecyclerAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var loadingView: View
-    private lateinit var paginationLoadingView: View
-    private lateinit var errorScreen: View
+    private lateinit var binding:FragmentMovieListBinding
 
     private var callbacks: Callbacks? = null
 
@@ -52,18 +50,16 @@ class MovieListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_movie_list, container, false)
-        recyclerView = rootView.findViewById(R.id.recyclerview)
-        loadingView = rootView.findViewById(R.id.loading_view)
-        paginationLoadingView = rootView.findViewById(R.id.pagination_loading_view)
-        errorScreen = rootView.findViewById(R.id.error_screen)
-      //  initRecyclerView()
+        binding = FragmentMovieListBinding.inflate(inflater,container,false)
+        binding.viewModel = movieListViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        initRecyclerView()
         setHasOptionsMenu(true)
-        return rootView
+        return binding.root
     }
 
     private fun initRecyclerView() {
-        recyclerView.apply {
+        binding.recyclerview.apply {
             this@MovieListFragment.adapter =
                 MoviesRecyclerAdapter(
                     onMovieClickListener
@@ -77,9 +73,9 @@ class MovieListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         movieListViewModel.getListMovie(1,Category.TOPRATED)
-        subscribeObservers()
+      //  subscribeObservers()
     }
-
+/*
     private fun subscribeObservers() {
         movieListViewModel.movies.observe(viewLifecycleOwner, Observer { resourcelistMovies->
             Log.d(TAG, "on Changed: ${resourcelistMovies.status}")
@@ -90,7 +86,7 @@ class MovieListFragment : Fragment() {
                 }
             }
         })
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -125,12 +121,15 @@ class MovieListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
+                movieListViewModel.getListMovie(pageNumber = 1,category = Category.UPCOMING)
                 true
             }
             R.id.menu_item_popular_movies -> {
+                movieListViewModel.getListMovie(pageNumber = 1,category = Category.POPULAR)
                 true
             }
             R.id.menu_item_top_rated -> {
+                movieListViewModel.getListMovie(pageNumber = 1,category = Category.TOPRATED)
                 true
             }
 
@@ -150,8 +149,7 @@ class MovieListFragment : Fragment() {
     }
 
     private val onMovieClickListener: (movie: Movie) -> Unit = { movie ->
-        Log.d(TAG, "onMovieClick: ${callbacks} ")
-        callbacks?.onMovieClick(movie.id)
+        Log.d(TAG, "onMovieClick: ")
     }
 
     override fun onPause() {

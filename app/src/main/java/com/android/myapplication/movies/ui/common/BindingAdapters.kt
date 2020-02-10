@@ -5,6 +5,7 @@ import IMAGE_BASE_URL
 import IMAGE_FILE_SIZE
 import YOUTUBE_THUMBNAIL_BASE_URL
 import YOUTUBE_THUMBNAIL_URL_JPG
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -13,10 +14,8 @@ import com.android.myapplication.movies.R
 import com.android.myapplication.movies.ui.detail.fragments.CastAdapter
 import com.android.myapplication.movies.ui.detail.fragments.ReviewAdapter
 import com.android.myapplication.movies.ui.detail.fragments.TrailerAdapter
-import com.android.myapplication.popularmovies.api.model.Cast
-import com.android.myapplication.popularmovies.api.model.Genre
-import com.android.myapplication.popularmovies.api.model.Review
-import com.android.myapplication.popularmovies.api.model.Video
+import com.android.myapplication.movies.util.Resource
+import com.android.myapplication.popularmovies.api.model.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -73,13 +72,6 @@ fun setGenre(textView: TextView, genres: List<Genre>?) {
     textView.setText(stringBuild)
 }
 
-@BindingAdapter("castAdapterList")
-fun RecyclerView.submitList(casts: List<Cast>?) {
-    val adapter = this.adapter as CastAdapter
-    casts?.let {
-        adapter.submitList(casts)
-    }
-}
 @BindingAdapter("reviewAdapterList")
 fun RecyclerView.submitReviewList(reviews: List<Review>?) {
     val adapter = this.adapter as ReviewAdapter
@@ -103,3 +95,4 @@ fun RecyclerView.submitCastList(casts: List<Cast>?) {
         adapter.submitList(casts)
     }
 }
+
