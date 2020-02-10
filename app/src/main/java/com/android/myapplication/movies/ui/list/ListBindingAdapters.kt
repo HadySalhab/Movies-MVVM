@@ -86,16 +86,17 @@ fun emptyDataVisibility(view: View, repoResult: Resource<List<Movie>>?) {
 
 @BindingAdapter("networkErrorVisibility")
 fun networkErrorVisibility(view: View, repoResult: Resource<List<Movie>>?) {
-    repoResult?.let {
-        if (repoResult is Resource.Error && repoResult.data == null) {
+   repoResult.let {
+        if (repoResult is Resource.Error && !repoResult.message.equals(QUERY_EXHAUSTED) && repoResult.data.isNullOrEmpty()) {
             view.visibility = View.VISIBLE
         } else {
             view.visibility = View.GONE
         }
     }
 }
+
 @BindingAdapter("movieFrontImage")
-fun ImageView.loadFrontMovieImage(imageUrl:String?){
+fun ImageView.loadFrontMovieImage(imageUrl: String?) {
     val image = IMAGE_BASE_URL + IMAGE_FILE_SIZE + imageUrl
     Glide.with(this.context)
         .load(image)

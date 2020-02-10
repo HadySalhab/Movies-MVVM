@@ -1,10 +1,9 @@
 package com.android.myapplication.movies.ui.list
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.android.myapplication.movies.persistence.PreferencesStorage
 import com.android.myapplication.movies.repository.MoviesRepository
 import com.android.myapplication.movies.util.Category
 import com.android.myapplication.movies.util.Resource
@@ -12,7 +11,7 @@ import com.android.myapplication.popularmovies.api.model.Movie
 
 const val QUERY_EXHAUSTED = "No Available Data"
 
-class MovieListViewModel(private val repository: MoviesRepository) : ViewModel() {
+class MovieListViewModel(private val repository: MoviesRepository,val app:Application) : AndroidViewModel(app) {
     enum class ListViewState {
         GET,
         SEARCH
@@ -24,8 +23,8 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
 
     var isQueryExhausted: Boolean = false
     var isPerformingQuery: Boolean = false
-    var query: String? = null
-    var category: Category = Category.POPULAR
+    var query: String? = PreferencesStorage.getStoredQuery(app.applicationContext)
+    var category: Category = PreferencesStorage.getStoredCategory(app.applicationContext)
 
     private val _pageNumber = MutableLiveData<Int>()
     val pageNumber: LiveData<Int>
@@ -59,23 +58,30 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
         query?.let {
             val repositorySource = repository.searchListMovie(pageNumber.value!!, it)
             _movies.addSource(repositorySource) { resourceListMovie ->
+                Log.d(TAG, "addSource(repositorySource)")
                 if (resourceListMovie != null) {
+                    Log.d(TAG, "resourceListMovie != null")
                     _movies.value = resourceListMovie
                     if (resourceListMovie is Resource.Success) {
+                        Log.d(TAG, "resourceListMovie is Resource.Success")
                         isPerformingQuery = false
                         if (resourceListMovie.data != null) {
+                            Log.d(TAG, "resourceListMovie.data != null")
                             if (resourceListMovie.data.isEmpty()) {
-                                Log.d(TAG, "executeSearchRequest: Query is exhausted")
+                                Log.d(TAG, "resourceListMovie.data.isEmpty()")
                                 _movies.value =
                                     Resource.Error(QUERY_EXHAUSTED, resourceListMovie.data)
                             }
                         }
                         _movies.removeSource(repositorySource)
                     } else if (resourceListMovie is Resource.Error) {
+                        Log.d(TAG, "resourceListMovie is Resource.Error")
+                        Log.d(TAG, "executeSearchRequest: ${resourceListMovie.data},${resourceListMovie.message},}")
                         isPerformingQuery = false
                         _movies.removeSource(repositorySource)
                     }
                 } else {
+                    Log.d(TAG, "resourceListMovie == null")
                     _movies.removeSource(repositorySource)
                 }
             }
@@ -83,6 +89,7 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
     }
 
     fun getListMovie(pageNumber: Int, category: Category) {
+        this.query = null
         if (!isPerformingQuery) {
             _pageNumber.value = pageNumber
             this.category = category
@@ -96,23 +103,29 @@ class MovieListViewModel(private val repository: MoviesRepository) : ViewModel()
         _viewState.value = ListViewState.GET
         val repositorySource = repository.getListMovie(pageNumber.value!!, this.category)
         _movies.addSource(repositorySource) { resourceListMovie ->
+            Log.d(TAG, "addSource(repositorySource)")
             if (resourceListMovie != null) {
+                Log.d(TAG, "resourceListMovie != null")
                 _movies.value = resourceListMovie
                 if (resourceListMovie is Resource.Success) {
+                    Log.d(TAG, "resourceListMovie is Resource.Success")
                     isPerformingQuery = false
                     if (resourceListMovie.data != null) {
+                        Log.d(TAG, "resourceListMovie.data != null")
                         if (resourceListMovie.data.isEmpty()) {
-                            Log.d(TAG, "executeSearchRequest: Query is exhausted")
+                            Log.d(TAG, "resourceListMovie.data.isEmpty()")
                             _movies.value =
                                 Resource.Error(QUERY_EXHAUSTED, resourceListMovie.data)
                         }
                     }
                     _movies.removeSource(repositorySource)
                 } else if (resourceListMovie is Resource.Error) {
+                    Log.d(TAG, "resourceListMovie is Resource.Error)")
                     isPerformingQuery = false
                     _movies.removeSource(repositorySource)
                 }
             } else {
+                Log.d(TAG, "resourceListMovie == nul")
                 _movies.removeSource(repositorySource)
             }
 

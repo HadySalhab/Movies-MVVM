@@ -25,21 +25,27 @@ class MoviesRepository(
         return object : NetworkBoundResource<List<Movie>, MoviesResponse>(appExecutors) {
             override fun saveCallResult(item: MoviesResponse?) {
                 item?.let {
-                    val movies = item.movies
-                    val moviesWithCategory = mutableListOf<Movie>()
-                    movies?.forEach {
+                    val list: ArrayList<Movie>? = (item.movies)?.let { ArrayList(it) }
+                    val newList:ArrayList<Movie>? = ArrayList<Movie>()
+                    list?.forEach {
                         val movie = it.copy(categoryType = category)
                         Log.d(TAG, "saveCallResult: ${movie}")
-                        moviesWithCategory.add(movie)
+                        newList?.add(movie)
                     }
-                    movieDao.insertMovies(*moviesWithCategory.toTypedArray())
+                    newList?.let {
+                        movieDao.insertMovies(*newList.toTypedArray())
+                    }
                 }
             }
 
             override fun shouldFetch(data: List<Movie>?): Boolean = true
 
             override fun loadFromDb(): LiveData<List<Movie>> {
-              val movies = movieDao.getListMovie(pageNumber,category)
+                val movies = when (category) {
+                    Category.TOPRATED -> movieDao.getTopRatedListMovie(pageNumber, category)
+                    Category.UPCOMING -> movieDao.getUpComingListMovie(pageNumber, category)
+                    else -> movieDao.getPopularListMovie(pageNumber, category)
+                }
                 Log.d(TAG, "loadFromDb: ${movies.value}")
                 return movies
             }

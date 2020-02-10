@@ -49,6 +49,9 @@ data class Movie(
     @SerializedName("overview")
     val overview: String? = null,
 
+    @SerializedName("popularity")
+    val popularity:Double=0.0,
+
     @ColumnInfo(name = "category")
     val categoryType:Category = Category.POPULAR,
 

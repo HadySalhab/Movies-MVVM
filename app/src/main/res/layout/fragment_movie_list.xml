@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:emptyDataVisibility="@{viewModel.movies}"
-            app:layout_constraintBottom_toBottomOf="@+id/loading_view"
+            app:layout_constraintBottom_toBottomOf="@+id/recyclerview"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

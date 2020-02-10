@@ -9,10 +9,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.R
 import com.android.myapplication.movies.databinding.FragmentMovieListBinding
+import com.android.myapplication.movies.persistence.PreferencesStorage
 import com.android.myapplication.movies.util.Category
 import com.android.myapplication.movies.util.RecyclerViewDecoration
 import com.android.myapplication.popularmovies.api.model.Movie
@@ -28,7 +27,7 @@ class MovieListFragment : Fragment() {
 
     private val movieListViewModel by viewModel<MovieListViewModel>()
     private lateinit var adapter: MoviesRecyclerAdapter
-    private lateinit var binding:FragmentMovieListBinding
+    private lateinit var binding: FragmentMovieListBinding
 
     private var callbacks: Callbacks? = null
 
@@ -50,7 +49,7 @@ class MovieListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMovieListBinding.inflate(inflater,container,false)
+        binding = FragmentMovieListBinding.inflate(inflater, container, false)
         binding.viewModel = movieListViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         initRecyclerView()
@@ -72,21 +71,18 @@ class MovieListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        movieListViewModel.getListMovie(1,Category.TOPRATED)
-      //  subscribeObservers()
+        getMovieList()
     }
-/*
-    private fun subscribeObservers() {
-        movieListViewModel.movies.observe(viewLifecycleOwner, Observer { resourcelistMovies->
-            Log.d(TAG, "on Changed: ${resourcelistMovies.status}")
-            resourcelistMovies.data?.let {data->
-                Log.d(TAG, "data: ${data.size}")
-                data.forEach {
-                    Log.d(TAG, "subscribeObservers: ${it}")
-                }
-            }
-        })
-    }*/
+    fun getMovieList(){
+        val query = movieListViewModel.query
+        if(query!=null){
+            movieListViewModel.searchListMovie(1,query =query)
+        }else{
+            movieListViewModel.getListMovie(1,movieListViewModel.category)
+        }
+    }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -101,10 +97,13 @@ class MovieListFragment : Fragment() {
             queryHint = context.getString(R.string.query_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
+                        movieListViewModel.searchListMovie(1, query)
+                    }
                     onActionViewCollapsed()
                     searchItem.collapseActionView()
                     hideSoftKeyboard()
-                    return false
+                    return true
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
@@ -121,15 +120,15 @@ class MovieListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
-                movieListViewModel.getListMovie(pageNumber = 1,category = Category.UPCOMING)
+                movieListViewModel.getListMovie(pageNumber = 1, category = Category.UPCOMING)
                 true
             }
             R.id.menu_item_popular_movies -> {
-                movieListViewModel.getListMovie(pageNumber = 1,category = Category.POPULAR)
+                movieListViewModel.getListMovie(pageNumber = 1, category = Category.POPULAR)
                 true
             }
             R.id.menu_item_top_rated -> {
-                movieListViewModel.getListMovie(pageNumber = 1,category = Category.TOPRATED)
+                movieListViewModel.getListMovie(pageNumber = 1, category = Category.TOPRATED)
                 true
             }
 
@@ -154,18 +153,13 @@ class MovieListFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        //savePreferences()
+        savePreferences()
     }
 
-/*    fun savePreferences() {
+    fun savePreferences() {
         PreferencesStorage.setStoredQuery(this.requireContext(), movieListViewModel.query)
-        val category = when (movieListViewModel.categories) {
-            Categories.TOP_RATED -> "top_rated"
-            Categories.UPCOMING -> "upComing"
-            else -> "popular"
-        }
-        PreferencesStorage.setStoredCategory(this.requireContext(), category)
-    }*/
+        PreferencesStorage.setStoredCategory(this.requireContext(), movieListViewModel.category)
+    }
 }
 
 

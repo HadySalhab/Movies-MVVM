@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4c72b44120f06e05cf678fe038435107",
+    "identityHash": "55b3a34af5fec8f7265ffb41b49087b9",
     "entities": [
       {
         "tableName": "movie",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `poster_path` TEXT, `backdrop_path` TEXT, `genres` TEXT, `vote_average` REAL, `vote_count` INTEGER NOT NULL, `status` TEXT, `release_date` TEXT, `overview` TEXT, `category` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `poster_path` TEXT, `backdrop_path` TEXT, `genres` TEXT, `vote_average` REAL, `vote_count` INTEGER NOT NULL, `status` TEXT, `release_date` TEXT, `overview` TEXT, `popularity` REAL NOT NULL, `category` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -67,6 +67,12 @@
             "columnName": "overview",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "popularity",
+            "columnName": "popularity",
+            "affinity": "REAL",
+            "notNull": true
           },
           {
             "fieldPath": "categoryType",
@@ -289,7 +295,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4c72b44120f06e05cf678fe038435107')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55b3a34af5fec8f7265ffb41b49087b9')"
     ]
   }
 }
