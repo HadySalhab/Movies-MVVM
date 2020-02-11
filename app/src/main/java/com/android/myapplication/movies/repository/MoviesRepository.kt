@@ -26,7 +26,7 @@ class MoviesRepository(
             override fun saveCallResult(item: MoviesResponse?) {
                 item?.let {
                     val list: ArrayList<Movie>? = (item.movies)?.let { ArrayList(it) }
-                    val newList:ArrayList<Movie>? = ArrayList<Movie>()
+                    val newList: ArrayList<Movie>? = ArrayList<Movie>()
                     list?.forEach {
                         val movie = it.copy(categoryType = category)
                         Log.d(TAG, "saveCallResult: ${movie}")
@@ -38,18 +38,12 @@ class MoviesRepository(
                 }
             }
 
-            override fun shouldFetch(data: List<Movie>?): Boolean = true
-
-            override fun loadFromDb(): LiveData<List<Movie>> {
-                val movies = when (category) {
-                    Category.TOPRATED -> movieDao.getMovies(pageNumber, category)
-                    Category.UPCOMING -> movieDao.getMovies(pageNumber, category)
-                    else -> movieDao.getMovies(pageNumber, category)
-                }
-                Log.d(TAG, "loadFromDb: ${movies.value}")
-                return movies
+            override fun shouldFetch(data: List<Movie>?): Boolean {
+                return true
             }
 
+            override fun loadFromDb(): LiveData<List<Movie>> =
+                movieDao.getMovies(pageNumber, category)
 
             override fun createCall(): LiveData<ApiResponse<MoviesResponse>> = when (category) {
                 Category.TOPRATED -> movieApi.getTopRatedMovies(pageNumber)

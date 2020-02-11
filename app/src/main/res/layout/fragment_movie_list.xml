@@ -32,10 +32,10 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/loading_view"
             app:layout_constraintBottom_toTopOf="@+id/pagination_loading_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loading_view"
             app:movieList="@{viewModel.movies.data}"
             app:rvVisibility="@{viewModel.movies}"
             app:spanCount="3"
@@ -47,12 +47,13 @@
             layout="@layout/loading_list_item"
             android:layout_width="match_parent"
             android:layout_height="@dimen/recycler_loading_view_height"
-            android:visibility="visible"
-            app:pageNumber="@{viewModel.pageNumber}"
-            app:paginationRepoResult="@{viewModel.movies}"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:pageNumber="@{viewModel.pageNumber}"
+            app:paginationRepoResult="@{viewModel.movies}" />
 
         <include
             android:id="@+id/empty_data_screen"

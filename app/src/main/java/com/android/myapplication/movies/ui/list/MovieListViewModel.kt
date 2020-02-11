@@ -48,6 +48,7 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
 
     //for next page
     fun getNextPage() {
+        Log.d(TAG, "getNextPage: ")
         if (!isQueryExhausted && !isPerformingQuery) {
             _pageNumber.value = _pageNumber.value?.plus(1)
             executeRequest()

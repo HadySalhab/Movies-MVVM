@@ -2,18 +2,12 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e1de72b89f27c4abc5561728b864b5bd",
+    "identityHash": "3a760b9743b42dd0b6022c5fa41a5883",
     "entities": [
       {
         "tableName": "movie",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`primary_key` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `title` TEXT, `poster_path` TEXT, `backdrop_path` TEXT, `genres` TEXT, `vote_average` REAL, `vote_count` INTEGER NOT NULL, `status` TEXT, `release_date` TEXT, `overview` TEXT, `popularity` REAL NOT NULL, `category` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `poster_path` TEXT, `backdrop_path` TEXT, `genres` TEXT, `vote_average` REAL, `vote_count` INTEGER NOT NULL, `status` TEXT, `release_date` TEXT, `overview` TEXT, `popularity` REAL NOT NULL, `category` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`, `category`))",
         "fields": [
-          {
-            "fieldPath": "primaryKey",
-            "columnName": "primary_key",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "id",
             "columnName": "id",
@@ -95,213 +89,36 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "primary_key"
+            "id",
+            "category"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_movie_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE  INDEX `index_movie_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_movie_category",
+            "unique": false,
+            "columnNames": [
+              "category"
+            ],
+            "createSql": "CREATE  INDEX `index_movie_category` ON `${TABLE_NAME}` (`category`)"
+          }
+        ],
         "foreignKeys": []
-      },
-      {
-        "tableName": "video",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `movie_id` INTEGER NOT NULL, `key` TEXT, `name` TEXT, `site` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`movie_id`) REFERENCES `movie`(`primary_key`) ON UPDATE CASCADE ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "movieId",
-            "columnName": "movie_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "key",
-            "columnName": "key",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "site",
-            "columnName": "site",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [
-          {
-            "name": "index_video_movie_id",
-            "unique": false,
-            "columnNames": [
-              "movie_id"
-            ],
-            "createSql": "CREATE  INDEX `index_video_movie_id` ON `${TABLE_NAME}` (`movie_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "movie",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "movie_id"
-            ],
-            "referencedColumns": [
-              "primary_key"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "cast",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cast_id` INTEGER NOT NULL, `name` TEXT, `profile_path` TEXT, `character` TEXT, `movie_id` INTEGER NOT NULL, PRIMARY KEY(`cast_id`), FOREIGN KEY(`movie_id`) REFERENCES `movie`(`primary_key`) ON UPDATE CASCADE ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "castId",
-            "columnName": "cast_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "profilePath",
-            "columnName": "profile_path",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "character",
-            "columnName": "character",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "movieId",
-            "columnName": "movie_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "cast_id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [
-          {
-            "name": "index_cast_movie_id",
-            "unique": false,
-            "columnNames": [
-              "movie_id"
-            ],
-            "createSql": "CREATE  INDEX `index_cast_movie_id` ON `${TABLE_NAME}` (`movie_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "movie",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "movie_id"
-            ],
-            "referencedColumns": [
-              "primary_key"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "review",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `movie_id` INTEGER NOT NULL, `author` TEXT, `content` TEXT, `url` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`movie_id`) REFERENCES `movie`(`primary_key`) ON UPDATE CASCADE ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "movieId",
-            "columnName": "movie_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "author",
-            "columnName": "author",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "content",
-            "columnName": "content",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [
-          {
-            "name": "index_review_movie_id",
-            "unique": false,
-            "columnNames": [
-              "movie_id"
-            ],
-            "createSql": "CREATE  INDEX `index_review_movie_id` ON `${TABLE_NAME}` (`movie_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "movie",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "movie_id"
-            ],
-            "referencedColumns": [
-              "primary_key"
-            ]
-          }
-        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e1de72b89f27c4abc5561728b864b5bd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3a760b9743b42dd0b6022c5fa41a5883')"
     ]
   }
 }
