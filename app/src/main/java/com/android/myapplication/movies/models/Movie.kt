@@ -12,8 +12,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "movie")
 data class Movie(
+    @ColumnInfo(name = "primary_key")
+    @PrimaryKey(autoGenerate = true)
+    val primaryKey:Long =0,
 
-    @PrimaryKey
     @SerializedName("id")
     val id: Long = 0,
 

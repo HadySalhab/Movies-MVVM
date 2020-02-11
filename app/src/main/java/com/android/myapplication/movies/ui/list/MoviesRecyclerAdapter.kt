@@ -1,19 +1,11 @@
 package com.android.myapplication.movies.ui.list
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ListAdapter
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
-import com.android.myapplication.movies.R
+import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.databinding.MovieListItemBinding
 import com.android.myapplication.popularmovies.api.model.Movie
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 
 class MoviesRecyclerAdapter(private val onMovieClickListener: (Movie) -> Unit) :
     androidx.recyclerview.widget.ListAdapter<Movie, MoviesRecyclerAdapter.MovieViewHolder>(
@@ -26,6 +18,7 @@ class MoviesRecyclerAdapter(private val onMovieClickListener: (Movie) -> Unit) :
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = getItem(position)
         holder.bind(movie)
+
     }
 
 
@@ -51,6 +44,7 @@ class MoviesRecyclerAdapter(private val onMovieClickListener: (Movie) -> Unit) :
         fun bind(movie: Movie) {
             binding.movie = movie
             binding.viewHolder = this
+            binding.executePendingBindings()
         }
 
 

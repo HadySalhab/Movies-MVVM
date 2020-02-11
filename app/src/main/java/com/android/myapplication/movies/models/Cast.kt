@@ -4,7 +4,7 @@ import androidx.room.*
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "cast",foreignKeys = [ForeignKey(entity = Movie::class,
-    parentColumns = ["id"],
+    parentColumns = ["primary_key"],
     childColumns = ["movie_id"],
     onUpdate = ForeignKey.CASCADE,
     onDelete = ForeignKey.CASCADE)],

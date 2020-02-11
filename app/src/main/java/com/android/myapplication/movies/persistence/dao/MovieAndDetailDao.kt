@@ -18,18 +18,11 @@ interface MovieAndDetailDao{
     @Update
     fun updateMovie(movie:Movie)
 
-    /*LIST VIEW STATE*/
-    @Query("SELECT * FROM movie WHERE category= :category ORDER BY popularity DESC LIMIT (:pageNumber*19)")
-    fun getPopularListMovie(pageNumber: Int,category: Category):LiveData<List<Movie>>
-
-    @Query("SELECT * FROM movie WHERE category= :category ORDER BY release_date DESC LIMIT (:pageNumber*19)")
-    fun getUpComingListMovie(pageNumber: Int,category: Category):LiveData<List<Movie>>
-
-    @Query("SELECT * FROM movie WHERE category= :category  ORDER BY vote_average DESC LIMIT (:pageNumber*19)")
-    fun getTopRatedListMovie(pageNumber: Int,category: Category):LiveData<List<Movie>>
+    @Query("SELECT * FROM movie WHERE category=:category ORDER BY primary_key ASC LIMIT (:pageNumber*20)")
+    fun getMovies(pageNumber: Int,category: Category):LiveData<List<Movie>>
 
     /*LIST VIEW STATE*/
-    @Query("SELECT * FROM movie WHERE title LIKE '%' || :query || '%' ORDER BY vote_average DESC LIMIT (:pageNumber*19) ")
+    @Query("SELECT * FROM movie WHERE title LIKE '%' || :query || '%' ORDER BY primary_key DESC LIMIT (:pageNumber*20) ")
     fun searchListMovie(query: String,pageNumber:Int):LiveData<List<Movie>>
 
     /*DETAIL VIEW STATE*/

@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity(tableName = "video",
     foreignKeys = [ForeignKey(entity = Movie::class,
-        parentColumns = ["id"],
+        parentColumns = ["primary_key"],
         childColumns = ["movie_id"],
         onDelete = CASCADE,
         onUpdate = CASCADE)],

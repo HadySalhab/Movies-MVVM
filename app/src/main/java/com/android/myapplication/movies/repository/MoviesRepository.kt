@@ -42,9 +42,9 @@ class MoviesRepository(
 
             override fun loadFromDb(): LiveData<List<Movie>> {
                 val movies = when (category) {
-                    Category.TOPRATED -> movieDao.getTopRatedListMovie(pageNumber, category)
-                    Category.UPCOMING -> movieDao.getUpComingListMovie(pageNumber, category)
-                    else -> movieDao.getPopularListMovie(pageNumber, category)
+                    Category.TOPRATED -> movieDao.getMovies(pageNumber, category)
+                    Category.UPCOMING -> movieDao.getMovies(pageNumber, category)
+                    else -> movieDao.getMovies(pageNumber, category)
                 }
                 Log.d(TAG, "loadFromDb: ${movies.value}")
                 return movies
@@ -64,9 +64,9 @@ class MoviesRepository(
         return object : NetworkBoundResource<List<Movie>, MoviesResponse>(appExecutors) {
             override fun saveCallResult(item: MoviesResponse?) {
                 item?.let {
-                    val movies = item.movies
-                    movies?.let {
-                        movieDao.insertMovies(*movies.toTypedArray())
+                    val list: ArrayList<Movie>? = (item.movies)?.let { ArrayList(it) }
+                    list?.let {
+                        movieDao.insertMovies(*list.toTypedArray())
                     }
                 }
             }

@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity(tableName = "review",
     foreignKeys = [ForeignKey(entity = Movie::class,
-        parentColumns = ["id"],
+        parentColumns = ["primary_key"],
         childColumns = ["movie_id"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE)],

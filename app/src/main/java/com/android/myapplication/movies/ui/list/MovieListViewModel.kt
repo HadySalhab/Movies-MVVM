@@ -9,21 +9,15 @@ import com.android.myapplication.movies.util.Category
 import com.android.myapplication.movies.util.Resource
 import com.android.myapplication.popularmovies.api.model.Movie
 
-const val QUERY_EXHAUSTED = "No Available Data"
-
 class MovieListViewModel(private val repository: MoviesRepository, val app: Application) :
     AndroidViewModel(app) {
-    enum class ListViewState {
-        GET,
-        SEARCH
-    }
-
     companion object {
         private const val TAG = "MovieListViewModel"
     }
 
-    var isQueryExhausted: Boolean = false
-    var isPerformingQuery: Boolean = false
+    var isQueryExhausted: Boolean = false //query is exhausted when : data is null or empty, data returned < EXPECTED Total Result
+
+    var isPerformingQuery: Boolean = false //is performing query, as long as In loading state, not( Error or success)
     var query: String? = PreferencesStorage.getStoredQuery(app.applicationContext)
     var category: Category = PreferencesStorage.getStoredCategory(app.applicationContext)
 
@@ -49,6 +43,7 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
         }
     }
 
+    //for next page
     fun getNextPage() {
         if (!isQueryExhausted && !isPerformingQuery) {
             _pageNumber.value = _pageNumber.value?.plus(1)
@@ -57,6 +52,7 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
     }
 
     private fun executeRequest() {
+        Log.d(TAG, "executeRequest: ${pageNumber.value}")
         val repositorySource: LiveData<Resource<List<Movie>>>
         if (query != null) {
             repositorySource = repository.searchListMovie(pageNumber.value!!, query!!)
@@ -71,26 +67,27 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
         _movies.addSource(repositorySource) { resourceListMovie ->
             if (resourceListMovie != null) {
                 _movies.value = resourceListMovie
-                //success is reached, no more loading , aka no more Performing query
-                if (resourceListMovie is Resource.Success) {
-                    isPerformingQuery = false
-                    //checking if empty data returned when in success state => EmptyApiResponse
-                    if (resourceListMovie.data.isNullOrEmpty()) {
-                        isQueryExhausted = true
+                if (resourceListMovie is Resource.Success || resourceListMovie is Resource.Error) {
+                    unregisterMediatorLiveData(repositorySource)
+                    resourceListMovie.data?.let {
+                        //if data is null (when error or succes) recyclerview will be invisible, so the user cannot scroll to fetch the next page anyway
+                        if (it.size < _pageNumber.value!! * 10) {
+                            Log.d(TAG, "registerMediatorLiveData: ${it.size}")
+                            Log.d(TAG, "registerMediatorLiveData: ${_pageNumber.value}")
+                            isQueryExhausted = true
+                        }
                     }
-                    _movies.removeSource(repositorySource)
-                    //error is reached, no more loading , aka no more Performing query
-                } else if (resourceListMovie is Resource.Error) {
-                    isPerformingQuery = false
-                    _movies.removeSource(repositorySource)
                 }
             } else {
-                isPerformingQuery = false
-                _movies.removeSource(repositorySource)
+                unregisterMediatorLiveData(repositorySource)
             }
-
-
         }
+    }
+
+    //unregister when whole response is null or when response ==Success or Error
+    private fun unregisterMediatorLiveData(repositorySource: LiveData<Resource<List<Movie>>>) {
+        isPerformingQuery = false
+        _movies.removeSource(repositorySource)
     }
 
     fun resetPageNumber() {
