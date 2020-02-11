@@ -42,6 +42,11 @@ class MainActivity :AppCompatActivity(),
         startActivity(DetailActivity.getIntent(movieId,this))
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        (supportFragmentManager.findFragmentById(R.id.main_container) as MovieListFragment).onBackPressed()
+    }
+
 
 //    fun testRetrofitRequest(){
 //        val responseCall = movieApi.getMovieDetail(id=157336)

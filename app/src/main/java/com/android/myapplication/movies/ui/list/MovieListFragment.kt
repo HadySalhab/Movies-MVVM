@@ -182,6 +182,9 @@ class MovieListFragment : Fragment() {
         PreferencesStorage.setStoredQuery(this.requireContext(), movieListViewModel.query)
         PreferencesStorage.setStoredCategory(this.requireContext(), movieListViewModel.category)
     }
+    fun onBackPressed(){
+        movieListViewModel.cancelRequest()
+    }
 }
 
 

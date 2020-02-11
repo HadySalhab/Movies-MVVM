@@ -1,10 +1,5 @@
 package com.android.myapplication.movies.util
 
-import com.android.myapplication.popularmovies.api.model.Cast
-import com.android.myapplication.popularmovies.api.model.Review
-import com.android.myapplication.popularmovies.api.model.Video
-import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
-
 class RemoteToLocal {
 /*
     fun getMovieDetails(movieDetailsResponse: MovieDetailsResponse): MovieDetail {

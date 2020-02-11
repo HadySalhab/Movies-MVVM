@@ -1,12 +1,9 @@
 package com.android.myapplication.movies.ui.detail.fragments
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.android.myapplication.movies.repository.MoviesRepository
-import com.android.myapplication.movies.util.Event
 import com.android.myapplication.movies.util.RemoteToLocal
-import com.android.myapplication.popularmovies.api.responses.MovieDetailsResponse
 
 class DetailFragmentViewModel(app: Application,
                               private val repository: MoviesRepository,
