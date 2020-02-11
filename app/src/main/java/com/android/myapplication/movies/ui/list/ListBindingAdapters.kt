@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_movie_list.view.*
 
+//should be visible when in loading state and pageNumber >1
 @BindingAdapter("paginationRepoResult", "pageNumber")
 fun paginationLoadingVisibility(
     view: View,
@@ -31,7 +32,7 @@ fun paginationLoadingVisibility(
         }
     }
 }
-
+//should be visible when in loading state + pageNumber = 1
 @BindingAdapter("firstPageRepoResult", "pageNumber")
 fun firstPageLoadingVisibility(
     view: View,
@@ -57,11 +58,12 @@ fun RecyclerView.submitMovieList(movies: List<Movie>?) {
     }
 }
 
+//recyclerview should be visible only when data is available
 @BindingAdapter("rvVisibility")
 fun RecyclerView.checkVisibility(repoResult: Resource<List<Movie>>?) {
     repoResult?.let {
         repoResult.data?.let {
-            if (repoResult is Resource.Error && repoResult.message.equals(QUERY_EXHAUSTED)) {
+            if (repoResult.data.isNullOrEmpty()) {
                 this.visibility = View.GONE
             } else {
                 this.visibility = View.VISIBLE
@@ -70,12 +72,12 @@ fun RecyclerView.checkVisibility(repoResult: Resource<List<Movie>>?) {
     }
 }
 
-
+//should be visible when Success but no data returned
 @BindingAdapter("emptyDataVisibility")
 fun emptyDataVisibility(view: View, repoResult: Resource<List<Movie>>?) {
     repoResult?.let {
         repoResult.data?.let {
-            if (repoResult is Resource.Error && repoResult.message.equals(QUERY_EXHAUSTED)) {
+            if (repoResult is Resource.Success && repoResult.data.isNullOrEmpty()) {
                 view.visibility = View.VISIBLE
             } else {
                 view.visibility = View.GONE
@@ -84,10 +86,11 @@ fun emptyDataVisibility(view: View, repoResult: Resource<List<Movie>>?) {
     }
 }
 
+//should be visible when error and no data returned
 @BindingAdapter("networkErrorVisibility")
 fun networkErrorVisibility(view: View, repoResult: Resource<List<Movie>>?) {
    repoResult.let {
-        if (repoResult is Resource.Error && !repoResult.message.equals(QUERY_EXHAUSTED) && repoResult.data.isNullOrEmpty()) {
+        if (repoResult is Resource.Error && repoResult.data.isNullOrEmpty()) {
             view.visibility = View.VISIBLE
         } else {
             view.visibility = View.GONE

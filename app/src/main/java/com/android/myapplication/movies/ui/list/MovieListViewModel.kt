@@ -11,7 +11,8 @@ import com.android.myapplication.popularmovies.api.model.Movie
 
 const val QUERY_EXHAUSTED = "No Available Data"
 
-class MovieListViewModel(private val repository: MoviesRepository,val app:Application) : AndroidViewModel(app) {
+class MovieListViewModel(private val repository: MoviesRepository, val app: Application) :
+    AndroidViewModel(app) {
     enum class ListViewState {
         GET,
         SEARCH
@@ -30,9 +31,6 @@ class MovieListViewModel(private val repository: MoviesRepository,val app:Applic
     val pageNumber: LiveData<Int>
         get() = _pageNumber
 
-    private val _viewState = MutableLiveData<ListViewState>()
-    val viewState: LiveData<ListViewState>
-        get() = _viewState
 
     private val _movies = MediatorLiveData<Resource<List<Movie>>>()
     val movies: LiveData<Resource<List<Movie>>>
@@ -40,96 +38,62 @@ class MovieListViewModel(private val repository: MoviesRepository,val app:Applic
 
     init {
         _pageNumber.value = 1
-        _viewState.value = ListViewState.GET
     }
 
-    fun searchListMovie(pageNumber: Int, query: String) {
+    //for first page
+    fun getList() {
         if (!isPerformingQuery) {
-            _pageNumber.value = pageNumber
-            this.query = query
             isQueryExhausted = false
-            executeSearchRequest()
+            isPerformingQuery = true
+            executeRequest()
         }
     }
 
-    private fun executeSearchRequest() {
-        isPerformingQuery = true
-        _viewState.value = ListViewState.SEARCH
-        query?.let {
-            val repositorySource = repository.searchListMovie(pageNumber.value!!, it)
-            _movies.addSource(repositorySource) { resourceListMovie ->
-                Log.d(TAG, "addSource(repositorySource)")
-                if (resourceListMovie != null) {
-                    Log.d(TAG, "resourceListMovie != null")
-                    _movies.value = resourceListMovie
-                    if (resourceListMovie is Resource.Success) {
-                        Log.d(TAG, "resourceListMovie is Resource.Success")
-                        isPerformingQuery = false
-                        if (resourceListMovie.data != null) {
-                            Log.d(TAG, "resourceListMovie.data != null")
-                            if (resourceListMovie.data.isEmpty()) {
-                                Log.d(TAG, "resourceListMovie.data.isEmpty()")
-                                _movies.value =
-                                    Resource.Error(QUERY_EXHAUSTED, resourceListMovie.data)
-                            }
-                        }
-                        _movies.removeSource(repositorySource)
-                    } else if (resourceListMovie is Resource.Error) {
-                        Log.d(TAG, "resourceListMovie is Resource.Error")
-                        Log.d(TAG, "executeSearchRequest: ${resourceListMovie.data},${resourceListMovie.message},}")
-                        isPerformingQuery = false
-                        _movies.removeSource(repositorySource)
-                    }
-                } else {
-                    Log.d(TAG, "resourceListMovie == null")
-                    _movies.removeSource(repositorySource)
-                }
-            }
+    fun getNextPage() {
+        if (!isQueryExhausted && !isPerformingQuery) {
+            _pageNumber.value = _pageNumber.value?.plus(1)
+            executeRequest()
         }
     }
 
-    fun getListMovie(pageNumber: Int, category: Category) {
-        this.query = null
-        if (!isPerformingQuery) {
-            _pageNumber.value = pageNumber
-            this.category = category
-            isQueryExhausted = false
-            executeGetRequest()
+    private fun executeRequest() {
+        val repositorySource: LiveData<Resource<List<Movie>>>
+        if (query != null) {
+            repositorySource = repository.searchListMovie(pageNumber.value!!, query!!)
+        } else {
+            repositorySource = repository.getListMovie(pageNumber.value!!, this.category)
         }
+        registerMediatorLiveData(repositorySource)
     }
 
-    private fun executeGetRequest() {
-        isPerformingQuery = true
-        _viewState.value = ListViewState.GET
-        val repositorySource = repository.getListMovie(pageNumber.value!!, this.category)
+
+    fun registerMediatorLiveData(repositorySource: LiveData<Resource<List<Movie>>>) {
         _movies.addSource(repositorySource) { resourceListMovie ->
-            Log.d(TAG, "addSource(repositorySource)")
             if (resourceListMovie != null) {
-                Log.d(TAG, "resourceListMovie != null")
                 _movies.value = resourceListMovie
+                //success is reached, no more loading , aka no more Performing query
                 if (resourceListMovie is Resource.Success) {
-                    Log.d(TAG, "resourceListMovie is Resource.Success")
                     isPerformingQuery = false
-                    if (resourceListMovie.data != null) {
-                        Log.d(TAG, "resourceListMovie.data != null")
-                        if (resourceListMovie.data.isEmpty()) {
-                            Log.d(TAG, "resourceListMovie.data.isEmpty()")
-                            _movies.value =
-                                Resource.Error(QUERY_EXHAUSTED, resourceListMovie.data)
-                        }
+                    //checking if empty data returned when in success state => EmptyApiResponse
+                    if (resourceListMovie.data.isNullOrEmpty()) {
+                        isQueryExhausted = true
                     }
                     _movies.removeSource(repositorySource)
+                    //error is reached, no more loading , aka no more Performing query
                 } else if (resourceListMovie is Resource.Error) {
-                    Log.d(TAG, "resourceListMovie is Resource.Error)")
                     isPerformingQuery = false
                     _movies.removeSource(repositorySource)
                 }
             } else {
-                Log.d(TAG, "resourceListMovie == nul")
+                isPerformingQuery = false
                 _movies.removeSource(repositorySource)
             }
+
 
         }
     }
 
+    fun resetPageNumber() {
+        _pageNumber.value = 1
+    }
 }

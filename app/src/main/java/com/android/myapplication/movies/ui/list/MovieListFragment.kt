@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.R
 import com.android.myapplication.movies.databinding.FragmentMovieListBinding
 import com.android.myapplication.movies.persistence.PreferencesStorage
@@ -65,23 +66,31 @@ class MovieListFragment : Fragment() {
                 )
             addItemDecoration(RecyclerViewDecoration())
             adapter = this@MovieListFragment.adapter
-
         }
+        binding.recyclerview.addOnScrollListener(scrollListener)
     }
+
+    //scroll to get Next Page of result
+    private val scrollListener: RecyclerView.OnScrollListener =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    movieListViewModel.getNextPage()
+                }
+            }
+        }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getMovieList()
     }
-    fun getMovieList(){
-        val query = movieListViewModel.query
-        if(query!=null){
-            movieListViewModel.searchListMovie(1,query =query)
-        }else{
-            movieListViewModel.getListMovie(1,movieListViewModel.category)
-        }
-    }
 
+    //method to get the first page of result
+    fun getMovieList() {
+        movieListViewModel.resetPageNumber()
+        movieListViewModel.getList()
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -98,7 +107,8 @@ class MovieListFragment : Fragment() {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
-                        movieListViewModel.searchListMovie(1, query)
+                        movieListViewModel.query = query
+                        getMovieList()
                     }
                     onActionViewCollapsed()
                     searchItem.collapseActionView()
@@ -120,15 +130,27 @@ class MovieListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_up_coming -> {
-                movieListViewModel.getListMovie(pageNumber = 1, category = Category.UPCOMING)
+                movieListViewModel.apply {
+                    query = null
+                    category = Category.UPCOMING
+                }
+                getMovieList()
                 true
             }
             R.id.menu_item_popular_movies -> {
-                movieListViewModel.getListMovie(pageNumber = 1, category = Category.POPULAR)
+                movieListViewModel.apply {
+                    query = null
+                    category = Category.POPULAR
+                }
+                getMovieList()
                 true
             }
             R.id.menu_item_top_rated -> {
-                movieListViewModel.getListMovie(pageNumber = 1, category = Category.TOPRATED)
+                movieListViewModel.apply {
+                    query = null
+                    category = Category.TOPRATED
+                }
+                getMovieList()
                 true
             }
 
@@ -147,7 +169,7 @@ class MovieListFragment : Fragment() {
         }
     }
 
-    private val onMovieClickListener: (movie: Movie) -> Unit = { movie ->
+    private val onMovieClickListener: (movie: Movie) -> Unit = { _ ->
         Log.d(TAG, "onMovieClick: ")
     }
 

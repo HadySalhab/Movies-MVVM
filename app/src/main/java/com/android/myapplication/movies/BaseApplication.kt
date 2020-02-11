@@ -33,8 +33,7 @@ class BaseApplication : Application() {
         viewModel<MovieListViewModel> {
             val repository:MoviesRepository = get()
             MovieListViewModel(
-                repository
-            )
+                repository,this@BaseApplication)
         }
         single<MovieDB> {
             Room.databaseBuilder(
