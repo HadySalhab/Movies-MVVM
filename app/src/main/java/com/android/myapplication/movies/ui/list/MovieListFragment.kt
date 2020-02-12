@@ -3,7 +3,6 @@ package com.android.myapplication.movies.ui.list
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
@@ -16,7 +15,13 @@ import com.android.myapplication.movies.persistence.PreferencesStorage
 import com.android.myapplication.movies.util.Category
 import com.android.myapplication.movies.util.RecyclerViewDecoration
 import com.android.myapplication.popularmovies.api.model.Movie
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 /**
  * A simple [Fragment] subclass.
@@ -33,7 +38,7 @@ class MovieListFragment : Fragment() {
     private var callbacks: Callbacks? = null
 
     interface Callbacks {
-        fun onMovieClick(movieId: Long)
+        fun onMovieClick(movie:Movie)
     }
 
     override fun onAttach(context: Context) {
@@ -59,15 +64,18 @@ class MovieListFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
+        val viewPreloader = ViewPreloadSizeProvider<String>()
         binding.recyclerview.apply {
             this@MovieListFragment.adapter =
                 MoviesRecyclerAdapter(
-                    onMovieClickListener
+                    onMovieClickListener,viewPreloader,initGlide()
                 )
             addItemDecoration(RecyclerViewDecoration())
             adapter = this@MovieListFragment.adapter
         }
+        val preloader = RecyclerViewPreloader<String>(Glide.with(this),adapter,viewPreloader,20)
         binding.recyclerview.addOnScrollListener(scrollListener)
+        binding.recyclerview.addOnScrollListener(preloader)
     }
 
     //scroll to get Next Page of result
@@ -80,6 +88,12 @@ class MovieListFragment : Fragment() {
                 }
             }
         }
+
+    private fun initGlide(): RequestManager? {
+        val options: RequestOptions = RequestOptions()
+            .placeholder(R.drawable.ic_broken_image)
+        return Glide.with(this).setDefaultRequestOptions(options)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -169,8 +183,8 @@ class MovieListFragment : Fragment() {
         }
     }
 
-    private val onMovieClickListener: (movie: Movie) -> Unit = { _ ->
-        Log.d(TAG, "onMovieClick: ")
+    private val onMovieClickListener: (movie: Movie) -> Unit = { movie->
+        callbacks?.onMovieClick(movie)
     }
 
     override fun onPause() {

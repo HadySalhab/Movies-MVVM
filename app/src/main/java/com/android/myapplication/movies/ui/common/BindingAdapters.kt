@@ -7,10 +7,12 @@ import YOUTUBE_THUMBNAIL_BASE_URL
 import YOUTUBE_THUMBNAIL_URL_JPG
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.myapplication.movies.R
+import com.android.myapplication.movies.models.MovieDetails
 import com.android.myapplication.movies.ui.detail.fragments.CastAdapter
 import com.android.myapplication.movies.ui.detail.fragments.ReviewAdapter
 import com.android.myapplication.movies.ui.detail.fragments.TrailerAdapter
@@ -73,26 +75,106 @@ fun setGenre(textView: TextView, genres: List<Genre>?) {
 }
 
 @BindingAdapter("reviewAdapterList")
-fun RecyclerView.submitReviewList(reviews: List<Review>?) {
+fun RecyclerView.submitReviewList(repoResult: Resource<MovieDetails?>?) {
     val adapter = this.adapter as ReviewAdapter
-    reviews?.let {
-        adapter.submitList(reviews)
+    repoResult?.let {
+        repoResult.data?.let {
+            val reviews = it.reviews
+            reviews?.let {
+                adapter.submitList(it)
+            }
+        }
     }
 }
 
 @BindingAdapter("videoAdapterList")
-fun RecyclerView.submitVideoList(videos: List<Video>?) {
+fun RecyclerView.submitVideoList(repoResult: Resource<MovieDetails?>?) {
     val adapter = this.adapter as TrailerAdapter
-    videos?.let {
-        adapter.submitList(videos)
+    repoResult?.let {
+        repoResult.data?.let {
+            val trailers = it.trailers
+            trailers?.let {
+                adapter.submitList(it)
+            }
+        }
     }
 }
 
 @BindingAdapter("castAdapterList")
-fun RecyclerView.submitCastList(casts: List<Cast>?) {
+fun RecyclerView.submitCastList(repoResult: Resource<MovieDetails?>?) {
     val adapter = this.adapter as CastAdapter
-    casts?.let {
-        adapter.submitList(casts)
+    repoResult?.let {
+        repoResult.data?.let {
+            val reviews = it.casts
+            reviews?.let {
+                adapter.submitList(it)
+            }
+        }
     }
 }
 
+@BindingAdapter("emptyCastVisibility")
+fun View.emptyCastVisibility(repoResult: Resource<MovieDetails?>?) {
+    repoResult?.let {
+        repoResult.data?.let {
+            if (repoResult is Resource.Success && repoResult.data.casts.isNullOrEmpty()) {
+                this.visibility = View.VISIBLE
+            } else {
+                this.visibility = View.GONE
+            }
+        }
+    }
+
+}
+
+@BindingAdapter("emptyTrailersVisibility")
+fun View.emptyTrailersVisibility(repoResult: Resource<MovieDetails?>?) {
+    repoResult?.let {
+        repoResult.data?.let {
+            if (repoResult is Resource.Success && repoResult.data.trailers.isNullOrEmpty()) {
+                this.visibility = View.VISIBLE
+            } else {
+                this.visibility = View.GONE
+            }
+        }
+    }
+
+}
+
+@BindingAdapter("emptyReviewsVisibility")
+fun View.emptyReviewsVisibility(repoResult: Resource<MovieDetails?>?) {
+    repoResult?.let {
+        repoResult.data?.let {
+            if (repoResult is Resource.Success && repoResult.data.reviews.isNullOrEmpty()) {
+                this.visibility = View.VISIBLE
+            } else {
+                this.visibility = View.GONE
+            }
+        }
+    }
+
+}
+
+@BindingAdapter("detailNetworkErrorVisibility")
+fun View.detailNetworkErrorVisibility(repoResult: Resource<MovieDetails?>?) {
+    repoResult?.let {
+        if (repoResult is Resource.Error) {
+            this.visibility = View.VISIBLE
+        } else {
+            this.visibility = View.GONE
+        }
+
+    }
+}
+
+@BindingAdapter("detailProgressBarVisibility")
+fun ProgressBar.detailProgressBarVisibility(repoResult: Resource<MovieDetails?>?) {
+    repoResult?.let {
+        if (repoResult is Resource.Loading) {
+            this.visibility = View.VISIBLE
+        } else {
+            this.visibility = View.GONE
+        }
+
+    }
+}

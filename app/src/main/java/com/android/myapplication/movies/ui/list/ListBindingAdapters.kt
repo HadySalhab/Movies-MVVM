@@ -89,7 +89,7 @@ fun emptyDataVisibility(view: View, repoResult: Resource<List<Movie>>?) {
 //should be visible when error and no data returned
 @BindingAdapter("networkErrorVisibility")
 fun networkErrorVisibility(view: View, repoResult: Resource<List<Movie>>?) {
-   repoResult.let {
+   repoResult?.let {
         if (repoResult is Resource.Error && repoResult.data.isNullOrEmpty()) {
             view.visibility = View.VISIBLE
         } else {

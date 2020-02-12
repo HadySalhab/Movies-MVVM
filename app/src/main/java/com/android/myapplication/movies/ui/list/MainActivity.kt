@@ -1,5 +1,6 @@
 package com.android.myapplication.movies.ui.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import com.android.myapplication.movies.R
 import com.android.myapplication.movies.api.MoviesApi
 import com.android.myapplication.movies.ui.detail.DetailActivity
+import com.android.myapplication.popularmovies.api.model.Movie
 import org.koin.android.ext.android.inject
 
 class MainActivity :AppCompatActivity(),
@@ -37,46 +39,14 @@ class MainActivity :AppCompatActivity(),
         setSupportActionBar(toolbar)
     }
 
-    override fun onMovieClick(movieId: Long) {
-        Log.d(TAG, "onMovieClick: ")
-        startActivity(DetailActivity.getIntent(movieId,this))
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
         (supportFragmentManager.findFragmentById(R.id.main_container) as MovieListFragment).onBackPressed()
     }
 
+    override fun onMovieClick(movie: Movie) {
+        val intent = DetailActivity.getIntent(movie,this)
+        startActivity(intent)
+    }
 
-//    fun testRetrofitRequest(){
-//        val responseCall = movieApi.getMovieDetail(id=157336)
-//        responseCall.enqueue(object:Callback<MovieDetailsResponse>{
-//            override fun onFailure(call: Call<MovieDetailsResponse>, t: Throwable) {
-//                Log.d(TAG, "onFailure: server response failed ${t.message}}")
-//            }
-//
-//            override fun onResponse(
-//                call: Call<MovieDetailsResponse>,
-//                response: Response<MovieDetailsResponse>
-//            ) {
-//                Log.d(TAG, "onResponse: server response: ${response} ")
-//                if(response.code() == 200){
-//                    Log.d(TAG,"onResponse: ${response.body()}")
-//                    val moviesTitle = response.body()?.title
-//                    moviesTitle?.let {
-//                        moviesTitle.forEach { moviesTitle->
-//                            Log.d(TAG,"movie: ${moviesTitle}")
-//                        }
-//                    }
-//                } else{
-//                    try {
-//                        Log.d(TAG,"onResponse: ${response.errorBody()}")
-//                    }catch (e:IOException){
-//                        e.printStackTrace()
-//                    }
-//                }
-//            }
-//
-//        })
-//    }
 }

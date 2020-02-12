@@ -1,7 +1,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.android.myapplication.movies.ui.detail.fragments.DetailFragmentViewModel" />
+    </data>
 
 <ScrollView
     android:nestedScrollingEnabled="true"
@@ -13,14 +20,6 @@
         android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_poster"
@@ -28,17 +27,19 @@
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardElevation="16dp"
             app:layout_constraintDimensionRatio="w,2:3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/text_title">
 
             <ImageView
                 android:id="@+id/image_poster"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
+                app:frontImage="@{viewModel.movie.posterPath}"
                 tools:background="@tools:sample/backgrounds/scenic" />
 
         </androidx.cardview.widget.CardView>
@@ -48,35 +49,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@{viewModel.movie.title}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/primaryTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/card_poster"
-            app:layout_constraintTop_toTopOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Movie title here" />
 
-        <TextView
-            android:id="@+id/text_genre"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/primaryTextColor"
-            tools:text="Drama"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/text_title"
-            app:layout_constraintTop_toBottomOf="@+id/text_title">
-
-        </TextView>
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="text_title,text_genre,card_poster" />
+            app:constraint_referenced_ids="text_title,card_poster,text_overview,label_overview"
+            tools:layout_editor_absoluteY="200dp" />
 
         <View
             android:id="@+id/view_divider"
@@ -109,6 +101,7 @@
             android:drawableStart="@drawable/ic_av_timer_white"
             android:drawablePadding="4dp"
             android:gravity="center"
+            android:text="@{viewModel.movie.releaseDate}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constraintEnd_toEndOf="@+id/label_release_date"
             app:layout_constraintStart_toStartOf="@+id/label_release_date"
@@ -121,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
+            android:text="@{@string/vote_count(viewModel.movie.voteCount)}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="@color/secondaryTextColor"
             app:layout_constraintEnd_toStartOf="@+id/label_language"
@@ -135,6 +129,7 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_star_white"
             android:gravity="center"
+            app:voteAvg="@{viewModel.movie.voteAverage}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constraintEnd_toEndOf="@+id/label_vote"
             app:layout_constraintStart_toStartOf="@+id/label_vote"
@@ -148,10 +143,11 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="Status"
+            android:text="Language"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="@color/secondaryTextColor"
             app:layout_constraintEnd_toStartOf="@+id/label_release_date"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/label_vote"
             app:layout_constraintTop_toBottomOf="@+id/text_language" />
 
@@ -162,11 +158,12 @@
             android:drawableStart="@drawable/ic_info_outline"
             android:drawablePadding="4dp"
             android:gravity="center"
+            android:text="@{viewModel.movie.language}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constraintEnd_toEndOf="@+id/label_language"
             app:layout_constraintStart_toStartOf="@+id/label_language"
             app:layout_constraintTop_toTopOf="@+id/text_vote"
-            tools:text="Released" />
+            tools:text="en" />
 
         <View
             android:id="@+id/view_divider_bottom"
@@ -183,23 +180,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="Overview"
             android:textColor="@color/primaryTextColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_divider_bottom" />
+            app:layout_constraintStart_toEndOf="@+id/card_poster"
+            app:layout_constraintTop_toBottomOf="@+id/text_title" />
 
         <TextView
             android:id="@+id/text_overview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
+            android:text="@{viewModel.movie.overview}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="@color/secondaryTextColor"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_poster"
             app:layout_constraintTop_toBottomOf="@+id/label_overview"
             tools:text="@tools:sample/lorem" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,10 +15,10 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
         private const val TAG = "MovieListViewModel"
     }
 
-    var isQueryExhausted: Boolean =
+    private var isQueryExhausted: Boolean =
         false //query is exhausted when : data is null or empty, data returned < EXPECTED Total Result
 
-    var isPerformingQuery: Boolean =
+    private var isPerformingQuery: Boolean =
         false //is performing query, as long as In loading state, not( Error or success)
     var query: String? = PreferencesStorage.getStoredQuery(app.applicationContext)
     var category: Category = PreferencesStorage.getStoredCategory(app.applicationContext)
@@ -76,7 +76,7 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
                         unregisterMediatorLiveData(repositorySource)
                         resourceListMovie.data?.let {
                             //if data is null (when error or succes) recyclerview will be invisible, so the user cannot scroll to fetch the next page anyway
-                            if (it.size < _pageNumber.value!! * 10) {
+                            if (it.size < _pageNumber.value!! * 20) {
                                 Log.d(TAG, "registerMediatorLiveData: ${it.size}")
                                 Log.d(TAG, "registerMediatorLiveData: ${_pageNumber.value}")
                                 isQueryExhausted = true

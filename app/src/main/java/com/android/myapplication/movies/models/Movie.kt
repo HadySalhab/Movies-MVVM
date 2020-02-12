@@ -28,9 +28,6 @@ data class Movie(
     @SerializedName("backdrop_path")
     val backdropPath: String? = null,
 
-    @SerializedName("genres")
-    val genres: List<Genre>? = null,
-
     @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
     val voteAverage: Double? = 0.0,
@@ -39,8 +36,8 @@ data class Movie(
     @SerializedName("vote_count")
     var voteCount: Int = 0,
 
-    @SerializedName("status")
-    val status: String? = null,
+    @SerializedName("original_language")
+    val language: String? = null,
 
     @ColumnInfo(name = "release_date")
     @SerializedName("release_date")
@@ -53,11 +50,7 @@ data class Movie(
     val popularity:Double=0.0,
 
     @ColumnInfo(name = "category")
-    val categoryType:Category = Category.POPULAR,
-
-    @ColumnInfo(name = "timestamp")
-    val timestamp:Int=0
-
+    val categoryType:Category = Category.POPULAR
 
 ):Parcelable{
 }

@@ -18,18 +18,34 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_videos"
             android:layout_width="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
- />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:videoAdapterList="@{viewModel.movieDetails}" />
+        <ProgressBar
+            android:id="@+id/detail_progress_bar"
+            app:detailProgressBarVisibility="@{viewModel.movieDetails}"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="500dp"
+        <include
+            android:id="@+id/empty_data_screen"
+            layout="@layout/emptydata_screen"
+            android:layout_width="match_parent"
+            app:emptyTrailersVisibility="@{viewModel.movieDetails}"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="No Available Trailers At The Moment"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-            android:textColor="@color/colorAccent" />
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/error_screen"
+            layout="@layout/error_screen"
+            app:detailNetworkErrorVisibility="@{viewModel.movieDetails}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
     </FrameLayout>
 </layout>
