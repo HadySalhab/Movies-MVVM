@@ -76,7 +76,7 @@ class MovieListViewModel(private val repository: MoviesRepository, val app: Appl
                         unregisterMediatorLiveData(repositorySource)
                         resourceListMovie.data?.let {
                             //if data is null (when error or succes) recyclerview will be invisible, so the user cannot scroll to fetch the next page anyway
-                            if (it.size < _pageNumber.value!! * 20) {
+                            if (it.size < _pageNumber.value!! * 10) {
                                 Log.d(TAG, "registerMediatorLiveData: ${it.size}")
                                 Log.d(TAG, "registerMediatorLiveData: ${_pageNumber.value}")
                                 isQueryExhausted = true
